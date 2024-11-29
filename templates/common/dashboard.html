@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+    <div class="search-input">
+        <form id="search" action="{% url 'dashboard' %}">
+            <input type="text" placeholder="Type Something" id='searchText' name="search"/>
+            <i class="fa fa-search"></i>
+        </form>
+    </div>
+    {% if object_list %}
+        {% for object in object_list %}
+            {% include 'project-image-post.html' %}
+        {% endfor %}
+        <div class="pagination">
+        <span class="step-links">
+            {% if page_obj.has_previous %}
+                <a href="?page=1{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">&laquo; first</a>
+                <a href="?page={{ page_obj.previous_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">previous</a>
+            {% endif %}
+
+            <span class="current">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+            </span>
+
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">next</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">last &raquo;</a>
+            {% endif %}
+        </span>
+    </div>
+    {% else %}
+        <h1>No project posts</h1>
+    {% endif %}
+{% endblock %}

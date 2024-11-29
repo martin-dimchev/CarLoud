@@ -1,0 +1,98 @@
+{% load static %}
+{% load cloudinary %}
+{% load is_active %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap"
+          rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <title>CarLoud</title>
+
+    <link rel="stylesheet" href="{% static 'assets/css/fontawesome.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/car-loud-app.css' %}">
+
+</head>
+
+<body>
+
+<header class="header-area header-sticky">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <nav class="main-nav">
+                    <a href="{% url 'index' %}" class="logo">
+                        <img src="{% static 'assets/images/car-loud-logo.png' %}" alt="">
+                    </a>
+
+                    <ul class="nav">
+                        <li><a href="{% url 'index' %}" class="{% if request.path == '/' %}active{% endif %}">Home</a>
+                        </li>
+                        <li><a href="{% url 'dashboard' %}" class="{% is_active '/dashboard/' %}">Dashboard</a></li>
+                        {% if request.user.is_authenticated %}
+                            <li><a href="{% url 'garage' request.user.pk %}" class="{% is_active '/project/garage/' %}">Garage</a>
+                            </li>
+                        {% endif %}
+                        <li>
+                            {% if request.user.is_authenticated %}
+
+                                {% if request.user.profile.image %}
+                                    <a href="{% url 'user-details' request.user.pk %}"
+                                       class="{% is_active '/profile/' %}" id="login">Profile
+                                        {% cloudinary request.user.profile.image %}
+                                    </a>
+                                {% else %}
+                                    <a href="{% url 'user-details' request.user.pk %}"
+                                       class="{% is_active '/profile/' %}">Profile
+                                    </a>
+                                {% endif %}
+
+                            {% else %}
+                                <a href="{% url 'user-login' %}">Login</a>
+                            {% endif %}
+
+                        </li>
+                    </ul>
+                    <a class='menu-trigger'>
+                        <span>Menu</span>
+                    </a>
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-content">
+
+                {% block content %}
+                {% endblock %}
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <p>Copyright © 2024 <a href="https://github.com/martin-dimchev">Martin Dimchev</a>
+                    <br>All rights reserved.</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+</body>
+
+</html>

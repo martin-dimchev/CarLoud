@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load cloudinary %}
+
+{% block content %}
+    <div class="profile-library">
+        <div class="col-lg-12">
+            <div class="heading-section">
+                <h4><em>{{ projects_user.username }}'s</em> Garage</h4>
+            </div>
+            <div class="garage-items">
+                {% for project in object_list %}
+                    <div class="item">
+                        <a href="{% url 'project-details' project.pk %}">
+                        <ul>
+                            <li>{% cloudinary project.images.first.image class="projects-image" %}</li>
+                            <li><h6>{{ project.name }}</h6>
+                            <li><p>{{ project.brand }} {{ project.model }}</p></li>
+                        </ul>
+                        </a>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

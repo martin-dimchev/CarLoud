@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load cloudinary %}
+{% load static %}
+
+{% block content %}
+    <div class="project-details-info">
+        <h3>{{ object.name }}</h3>
+        <p>Brand: {{ object.brand }}</p>
+        <p>Model: {{ object.model }}</p>
+        <p>Year: {{ object.year }}</p>
+        <p>Description: {{ object.description }}</p>
+        <p>Horsepower: {{ object.horsepower }}</p>
+        <p>Drivetrain: {{ object.drivetrain }}</p>
+        <p>Private: {{ object.private }}</p>
+        <p>Added on: {{ object.created_at }}</p>
+    </div>
+    <div class="project-details-images">
+        {% for project_image in object.images.all %}
+            <a href="{% url 'project-image' project_image.project.pk project_image.pk %}">
+            <div class="project-image-container">
+                {% cloudinary project_image.image class="project-image" %}
+            </div>
+            </a>
+        {% endfor %}
+    </div>
+{% endblock %}

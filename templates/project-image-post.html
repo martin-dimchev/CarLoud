@@ -1,0 +1,61 @@
+{% load cloudinary %}
+{% load is_liked %}
+{% load static %}
+<div class="row">
+    <div class="dashboard-post">
+        <div class="profile-details">
+            <a href="{% url 'user-details' object.project.user.pk %}">
+            {% if object.project.user.profile.image %}
+                {% cloudinary object.project.user.profile.image class="profile-image" %}
+            {% else %}
+                <img
+                        src="{% static 'assets/images/anonymous-user.jpg' %}"
+                        alt="profile-image"
+                        class="profile-image">
+            {% endif %}
+            <h4>{{ object.project.user.username }}</h4>
+            </a>
+        </div>
+        <div class="post-image-container" id="image-{{ object.pk }}">
+            {% cloudinary object.image class="post-image" %}
+        </div>
+        <div class="comment-section">
+            <form method="post" action="{% url 'like' %}">
+                {% csrf_token %}
+                <input type="hidden" name="image_pk" value="{{ object.pk }}">
+                <button class="comment-section-btn">
+                    <i
+                            class="fa fa-hand-o-up {% is_liked request.user object.pk %}"
+                            aria-hidden="true"
+                    ></i>
+                    <span class="like-counter {% is_liked request.user object.pk %}">{{ object.likes.count }}</span>
+                </button>
+            </form>
+            <a href="{% url 'comment-section' object.pk %}">
+                <button class="comment-section-btn">
+                    <i
+                            class="fa fa-comment-o"
+                            aria-hidden="true"
+                    ></i>
+                </button>
+            </a>
+
+
+            <button class="comment-section-btn">
+                <i
+                        class="fa fa-share"
+                        aria-hidden="true"
+                ></i>
+            </button>
+        </div>
+        <div class="latest-comment">
+            {% if object.comments.last %}
+                <h5>Latest comment</h5>
+                <p>{{ object.comments.last.text }}</p>
+            {% else %}
+                <h5>No comments yet</h5>
+            {% endif %}
+        </div>
+        <a href="{% url 'project-details' object.project.pk %}">Project Details</a>
+    </div>
+</div>
