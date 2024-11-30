@@ -32,7 +32,9 @@ class User(AbstractUser):
             IsAlphaValidator('Your name must contain only letters'),
         ]
     )
-
+    is_verified = models.BooleanField(
+        default=False,
+    )
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
