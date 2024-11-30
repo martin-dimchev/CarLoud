@@ -17,8 +17,11 @@ DEBUG = config('DEBUG')
 ALLOWED_HOSTS = []
 
 CORS_ALLOWED_ORIGINS = [
+    'http://localhost:8000',
     'http://127.0.0.1:8000',
 ]
+
+CORS_ALLOW_CREDENTIALS = True
 
 MY_APPS = [
     'carLoudApp.accounts',
@@ -28,17 +31,18 @@ MY_APPS = [
 ]
 
 INSTALLED_APPS = [
-                     'django.contrib.admin',
-                     'django.contrib.auth',
-                     'django.contrib.contenttypes',
-                     'django.contrib.sessions',
-                     'django.contrib.messages',
-                     'django.contrib.staticfiles',
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
 
-                     'rest_framework',
-                     'corsheaders',
-                     'cloudinary',
-                 ] + MY_APPS
+    'rest_framework',
+    'corsheaders',
+    'cloudinary',
+    'bootstrap5',
+] + MY_APPS
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
@@ -124,15 +128,6 @@ cloudinary.config(
     api_secret=config('API_SECRET'),
 )
 
-REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.SessionAuthentication',
-        'rest_framework.authentication.TokenAuthentication',
-    ],
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticated',
-    ],
-}
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = config('EMAIL_HOST')

@@ -23,6 +23,6 @@ urlpatterns = [
     path('', include('carLoudApp.common.urls')),
     path('accounts/', include('carLoudApp.accounts.urls')),
     path('projects/', include('carLoudApp.projects.urls')),
-    path('posts/', include('carLoudApp.interactions.urls')),
+    path('api/', include('carLoudApp.interactions.urls')),
 
 ]

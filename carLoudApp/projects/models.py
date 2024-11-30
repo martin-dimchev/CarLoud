@@ -50,6 +50,10 @@ class ProjectImages(models.Model):
         related_name='images',
     )
     image = CloudinaryField('project_image')
+    caption = models.TextField(
+        blank=True,
+        null=True,
+    )
     created_at = models.DateTimeField(
         auto_now_add=True,
     )

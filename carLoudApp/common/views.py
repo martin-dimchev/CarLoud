@@ -28,7 +28,7 @@ class DashboardView(LoginRequiredMixin, ListView):
         search_query = self.request.GET.get('search')
         if search_query:
             queryset = queryset.filter(
-                Q(project__name__icontains=search_query) or
+                Q(project__title__icontains=search_query) or
                 Q(project__user__username__icontains=search_query)
 
             )
