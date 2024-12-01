@@ -587,20 +587,153 @@ button:hover {
 }
 
 .action-buttons .liked {
-     color: #5ce1e6;
-}
-
-.post-footer .caption {
-    margin-top: 10px;
+    color: #5ce1e6;
 }
 
 .caption-text {
-    margin-left: 0.5em;
+    margin-left: 0.1rem;
 }
 
 .like-counter {
-    font-size: 18px;
+    font-size: 0.4em;
 }
+
+/* Dark Theme Styles */
+body {
+    background-color: #121212;
+    color: #ffffff;
+}
+
+.modal-content {
+    background-color: #333;
+    border-radius: 8px;
+}
+
+.modal-header {
+    background-color: #444;
+    color: #ffffff;
+}
+
+.modal-title {
+    font-weight: bold;
+}
+
+.modal-body {
+    padding: 0
+}
+
+.list-group-item {
+    background-color: #1f2122;
+    color: #ddd;
+    border: 1px solid #444;
+}
+
+.btn-close:hover {
+    background-color: #777;
+}
+
+.modal-body::-webkit-scrollbar {
+    width: 8px;
+}
+
+.modal-body::-webkit-scrollbar-thumb {
+    background-color: #5ce1e6;
+    border-radius: 10px;
+    border: 3px solid #333; /* Border to make it look more distinct */
+}
+
+.modal-body::-webkit-scrollbar-thumb:hover {
+    background-color: #5ce1e6;
+}
+
+.modal-body::-webkit-scrollbar-track {
+    background-color: #444;
+    border-radius: 10px;
+}
+
+.modal-body::-webkit-scrollbar-track:hover {
+    background-color: #555;
+}
+
+
+.modal-footer {
+    background-color: #333;
+    border-top: 1px solid #444;
+}
+
+.input-group .form-control {
+    background: #1f2122;
+    color: #fff;
+    border: 0;
+}
+
+.input-group .form-control:focus {
+    border-color: transparent;
+    box-shadow: none;
+}
+
+.input-group .btn {
+    border: 0;
+    background-color: transparent;
+}
+
+.input-group .btn:active {
+    border: 0;
+    background-color: transparent;
+}
+
+
+.input-group .btn:hover {
+   color: #5ce1e6;
+}
+
+
+.comment-section-btn {
+    border: none;
+}
+
+.comment-text p {
+    padding: 5px 0 0 10px;
+}
+
+.comment-created-at {
+    text-align: right;
+    color: #7a7a7a;
+    font-size: 0.8rem;
+}
+
+.input-group .comment-add-btn {
+    background-color: #5ce1e6;
+    color: white;
+}
+
+.input-group .comment-add-btn:active {
+    background-color: white;
+    color: #5ce1e6;
+    border: 0;
+    box-shadow: none;
+}
+
+.input-group .comment-add-btn:focus {
+    background-color: white;
+    color: #5ce1e6;
+    border: 0;
+    box-shadow: none;
+}
+.input-group .comment-add-btn:active {
+    background-color: white;
+    color: #5ce1e6;
+    border: 0;
+    box-shadow: none;
+}
+
+.input-group .comment-add-btn:hover {
+    background-color: white;
+    color: #5ce1e6;
+    border: 0;
+    box-shadow: none;
+}
+
 
 
 .dashboard-post {
@@ -610,7 +743,7 @@ button:hover {
 .profile-image {
     max-width: 40px;
     border-radius: 50%;
-    margin-right: 10px;
+    margin-right: 2px;
 }
 
 .profile-details {
@@ -634,15 +767,13 @@ button:hover {
     margin-left: 10px;
 }
 
-.comment-section-btn {
-    margin: 0 5px;
-    background: transparent;
-    border: 0;
-    color: white;
-    transition: background-color 0.3s, color 0.3s;
-}
+
 
 .comment-section-btn:hover {
+    color: #5ce1e6;
+}
+
+.comment-section-btn:focus {
     color: #5ce1e6;
 }
 

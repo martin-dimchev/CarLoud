@@ -3,6 +3,7 @@ from django.http import Http404, HttpResponse
 from django.shortcuts import redirect
 from django.views import View
 from django.views.generic import ListView, DeleteView, UpdateView
+from rest_framework import status
 from rest_framework.authentication import SessionAuthentication
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
@@ -10,11 +11,13 @@ from rest_framework.response import Response
 from rest_framework.reverse import reverse_lazy
 from rest_framework.status import HTTP_403_FORBIDDEN, HTTP_201_CREATED, HTTP_200_OK, HTTP_404_NOT_FOUND
 from rest_framework.views import APIView
-from urllib3 import request
+
 
 from carLoudApp.interactions.forms import CommentForm
 from carLoudApp.interactions.models import Like, Comment
+from carLoudApp.interactions.serializers import CommentSerializer
 from carLoudApp.projects.models import ProjectImages
+
 
 
 class ToggleLikeAPIView(APIView):
@@ -22,8 +25,7 @@ class ToggleLikeAPIView(APIView):
     permission_classes = (IsAuthenticated,)
 
     def post(self, request, image_pk, *args, **kwargs):
-        print(request)
-        print(request.user)
+
         try:
             image = ProjectImages.objects.get(pk=image_pk)
         except ProjectImages.DoesNotExist:
@@ -31,7 +33,7 @@ class ToggleLikeAPIView(APIView):
 
         if image:
             image_likes_pks = image.likes.all().values_list('user', flat=True)
-            if request.user.id not in image_likes_pks:
+            if request.user.pk not in image_likes_pks:
                 Like.objects.create(user=request.user, image=image).save()
                 return Response(status=HTTP_201_CREATED, data={
                     "liked": True,
@@ -64,17 +66,29 @@ class CommentsListView(LoginRequiredMixin, ListView):
         return context
 
 
-class CommentCreateView(LoginRequiredMixin, View):
+class CommentCreateView(APIView):
+    authentication_classes = (SessionAuthentication,)
+    permission_classes = (IsAuthenticated,)
 
-    def post(self, request, *args, **kwargs):
-        form = CommentForm(request.POST or None)
-        if form.is_valid():
-            comment = form.save(commit=False)
-            image = ProjectImages.objects.get(pk=self.kwargs['image_pk'])
-            comment.image = image
-            comment.user = request.user
-            comment.save()
-            return redirect(f"{request.META.get('HTTP_REFERER')}#comment-{comment.pk}")
+    def post(self, request, image_pk, *args, **kwargs):
+        user = request.user
+        print(user)
+        try:
+            image = ProjectImages.objects.get(pk=image_pk)
+        except ProjectImages.DoesNotExist:
+            image = None
+
+        if image:
+            comment = Comment.objects.create(
+            user=user,
+            image=image,
+            text=request.data.get('text')
+        )
+            serializer = CommentSerializer(comment)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(status=HTTP_403_FORBIDDEN, data={})
+
+
 
 
 class CommentEditView(LoginRequiredMixin, UpdateView):

@@ -28,8 +28,9 @@ class DashboardView(LoginRequiredMixin, ListView):
         search_query = self.request.GET.get('search')
         if search_query:
             queryset = queryset.filter(
-                Q(project__title__icontains=search_query) or
-                Q(project__user__username__icontains=search_query)
+                Q(project__title__icontains=search_query) |
+                Q(project__user__username__icontains=search_query) |
+                Q(caption__icontains=search_query)
 
             )
 
@@ -41,6 +42,7 @@ class DashboardView(LoginRequiredMixin, ListView):
         ).order_by('-is_followed_user', '-created_at')
 
         return queryset
+
 
 
 

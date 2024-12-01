@@ -1,0 +1,42 @@
+{% load static %}
+{% load cloudinary %}
+{% load date_format %}
+{% load order_by %}
+
+<div class="modal fade" id="commentsModal{{ object.pk }}" tabindex="-1" aria-labelledby="commentsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="commentsModalLabel">Comments</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+
+                <ul class="list-group" id="comment-list-{{ object.pk }}">
+                    {% for comment in object.comments.all|order_by:'created_at' %}
+                        <li class="list-group-item">
+
+                            {% if comment.user.profile.image %}
+                                <a href="{% url 'user-details' comment.user.pk %}">{% cloudinary comment.user.profile.image class="profile-pic" %}<strong>{{ comment.user.username}}</strong></a>
+                            {% else %}
+                                <a href="{% url 'user-details' comment.user.pk %}"><img src="{% static 'assets/images/anonymous-user.jpg' %}" class="profile-pic" alt="profile-pic"><strong>{{ comment.user.username}}</strong></a>
+                            {% endif %}
+                            <div class="comment-text"><p>{{ comment.text }}</p></div>
+                            <div class="comment-created-at">{% date_format comment.created_at %}</div>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <div class="modal-footer">
+                <form data-image-id="{{ object.pk }}" class="w-100 comment-add-form">
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="userComment"
+                               placeholder="Write your comment here..." required>
+                        <button class="btn btn-primary comment-add-btn" type="submit">Add</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -8,22 +8,24 @@
             <span class="input-group-text bg-transparent border-0 search-icon">
                 <i class="fa fa-search" aria-hidden="true"></i> 
             </span>
-            <input type="text" name="search" class="form-control bg-transparent border-0 text-light" placeholder="Type Something">
-            <button type="submit" class="btn btn-transparent border-0">
-                <i class="bi bi-arrow-right-circle text-light"></i> 
-            </button>
-        </div>
+                <input type="text" name="search" class="form-control bg-transparent border-0 text-light"
+                       placeholder="Type Something">
+                <button type="submit" class="btn btn-transparent border-0">
+                    <i class="bi bi-arrow-right-circle text-light"></i>
+                </button>
+            </div>
         </form>
     </div>
     {% if object_list %}
         {% for object in object_list %}
-            {% include 'project-image-post.html' %}
+            {% include 'project-post.html' %}
         {% endfor %}
         <div class="pagination">
         <span class="step-links">
             {% if page_obj.has_previous %}
                 <a href="?page=1{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">&laquo; first</a>
-                <a href="?page={{ page_obj.previous_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">previous</a>
+                <a href="?page=
+                        {{ page_obj.previous_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">previous</a>
             {% endif %}
 
             <span class="current">
@@ -31,14 +33,16 @@
             </span>
 
             {% if page_obj.has_next %}
-                <a href="?page={{ page_obj.next_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">next</a>
-                <a href="?page={{ page_obj.paginator.num_pages }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">last &raquo;</a>
+                <a href="?page=
+                        {{ page_obj.next_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">next</a>
+                <a href="?page=
+                        {{ page_obj.paginator.num_pages }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">last &raquo;</a>
             {% endif %}
         </span>
-    </div>
+        </div>
     {% else %}
         <h1>No project posts</h1>
     {% endif %}
-    
+
 
 {% endblock %}

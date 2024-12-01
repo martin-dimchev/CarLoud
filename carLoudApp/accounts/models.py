@@ -41,7 +41,7 @@ class User(AbstractUser):
 
     @property
     def full_name(self):
-        return self.first_name + ' ' + self.last_name
+        return f'{self.first_name} {self.last_name}'
 
 class Profile(models.Model):
     user = models.OneToOneField(
@@ -50,7 +50,10 @@ class Profile(models.Model):
     )
     image = CloudinaryField(
         'profile_image',
+        null=True,
+        blank=True,
     )
+
     age = models.PositiveSmallIntegerField(
         null=True,
         blank=True,
