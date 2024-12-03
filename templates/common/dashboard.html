@@ -9,13 +9,14 @@
                 <i class="fa fa-search" aria-hidden="true"></i> 
             </span>
                 <input type="text" name="search" class="form-control bg-transparent border-0 text-light"
-                       placeholder="Type Something">
+                       placeholder="Search users or projects">
                 <button type="submit" class="btn btn-transparent border-0">
                     <i class="bi bi-arrow-right-circle text-light"></i>
                 </button>
             </div>
         </form>
     </div>
+    <hr class="my-4">
     {% if object_list %}
         {% for object in object_list %}
             {% include 'project-post.html' %}
@@ -41,7 +42,7 @@
         </span>
         </div>
     {% else %}
-        <h1>No project posts</h1>
+        <h4>No posts</h4>
     {% endif %}
 
 

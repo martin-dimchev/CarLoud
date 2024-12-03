@@ -19,7 +19,7 @@
     <title>CarLoud</title>
 
     <link rel="stylesheet" href="{% static 'assets/css/fontawesome.css' %}">
-    <link rel="stylesheet" href="{% static 'assets/css/car-loud-app.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/styles.css' %}">
     <script src="{% static 'js/app.js' %}"></script>
 
 </head>
@@ -56,7 +56,7 @@
 
                     {% if request.user.is_authenticated %}
                         <li class="nav-items">
-                            <a href="{% url 'garage' request.user.pk %}"
+                            <a href="{% url 'user-garage' request.user.pk %}"
                                class="{% is_active '/projects/garage/' %} nav-item-links">Garage</a>
                         </li>
                     {% endif %}

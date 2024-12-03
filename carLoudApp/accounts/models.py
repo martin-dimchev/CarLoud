@@ -66,6 +66,11 @@ class Profile(models.Model):
             GenderChoices.choices
         )
     )
+    bio = models.TextField(
+        max_length=255,
+        null=True,
+        blank=True,
+    )
 
 
 

@@ -3,7 +3,8 @@
 {% load date_format %}
 {% load order_by %}
 
-<div class="modal fade" id="commentsModal{{ object.pk }}" tabindex="-1" aria-labelledby="commentsModalLabel" aria-hidden="true">
+<div class="modal fade" id="commentsModal{{ object.pk }}" tabindex="-1" aria-labelledby="commentsModalLabel"
+     aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
@@ -14,15 +15,33 @@
 
                 <ul class="list-group" id="comment-list-{{ object.pk }}">
                     {% for comment in object.comments.all|order_by:'created_at' %}
-                        <li class="list-group-item">
+                        <li class="list-group-item" data-comment-id="{{ comment.pk }}">
+                            <div class="comment-header">
+                                {% if comment.user.profile.image %}
+                                    <a href="{% url 'user-details' comment.user.pk %}">{% cloudinary comment.user.profile.image class="profile-pic" %}<strong>{{ comment.user.username }}</strong></a>
+                                {% else %}
+                                    <a href="{% url 'user-details' comment.user.pk %}"><img
+                                            src="{% static 'assets/images/anonymous-user.jpg' %}" class="profile-pic"
+                                            alt="profile-pic"><strong>{{ comment.user.username }}</strong>
+                                    </a>
+                                {% endif %}
+                                {% if request.user.pk == comment.user.pk %}
+                                    <button class="btn btn-danger btn-sm delete-btn" data-comment-id="{{ comment.pk }}">
+                                        <i class="fa fa-trash" aria-hidden="true"></i>
+                                    </button>
+                                {% endif %}
+                            </div>
+                            <div class="comment-text">
+                                <p>{{ comment.text }}</p>
+                                {% if user.id == comment.user.id %}
+                                    <button class="btn btn-sm btn-link edit-btn"><i class="fa fa-pencil"
+                                                                                    aria-hidden="true"></i></button>
+                                {% endif %}
+                            </div>
+                            <div class="comment-created-at">
+                                <p>{% date_format comment.created_at %}</p>
 
-                            {% if comment.user.profile.image %}
-                                <a href="{% url 'user-details' comment.user.pk %}">{% cloudinary comment.user.profile.image class="profile-pic" %}<strong>{{ comment.user.username}}</strong></a>
-                            {% else %}
-                                <a href="{% url 'user-details' comment.user.pk %}"><img src="{% static 'assets/images/anonymous-user.jpg' %}" class="profile-pic" alt="profile-pic"><strong>{{ comment.user.username}}</strong></a>
-                            {% endif %}
-                            <div class="comment-text"><p>{{ comment.text }}</p></div>
-                            <div class="comment-created-at">{% date_format comment.created_at %}</div>
+                            </div>
                         </li>
                     {% endfor %}
                 </ul>

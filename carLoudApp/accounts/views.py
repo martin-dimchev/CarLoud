@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model, authenticate, login
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.views import LoginView
 
 from django.contrib.sites.shortcuts import get_current_site
 from django.shortcuts import redirect, render
@@ -13,13 +14,14 @@ from rest_framework.status import HTTP_403_FORBIDDEN
 from django.core.mail import EmailMessage
 
 from carLoudApp import settings
-from carLoudApp.accounts.forms import UserRegisterForm, UserLoginForm
+from carLoudApp.accounts.forms import UserRegisterForm, UserLoginForm, ResendEmailForm
 from carLoudApp.accounts.models import Follower
 from carLoudApp.accounts.utils import generate_token
 from carLoudApp.projects.models import Project, ProjectImages
 from django.conf import settings
 
 UserModel = get_user_model()
+
 
 def send_email(request, user):
     current_site = get_current_site(request)
@@ -38,7 +40,6 @@ def send_email(request, user):
     )
 
     email.send()
-
 
 
 def activate_user(request, uidb64, token):
@@ -69,27 +70,34 @@ def activate_user(request, uidb64, token):
 
     return render(request, 'accounts/verification-failed.html')
 
+
 def resend_verification_email(request):
-    if request.method == 'POST':
+    form = ResendEmailForm(request.POST or None)
+    message = ''
+
+    if form.is_valid():
         email = request.POST.get('email')
         try:
             user = UserModel.objects.get(email=email)
         except UserModel.DoesNotExist:
-            return render(request, 'accounts/resend-email.html', {
-                'message': 'No account found with this email.'
-            })
+            message = 'No account found with this email.'
+            user = None
 
-        if user.is_verified:
-            return render(request, 'accounts/account-login.html', {
-                'form': UserLoginForm(),
-                'message': 'Your account is already verified. Please login.'
-            })
-        else:
-            send_email(request, user)
-            return render(request, 'accounts/resend-email.html', {
-                'message': 'A new verification email has been sent. Please check your inbox.'
-            })
-    return render(request, 'accounts/resend-email.html')
+        if user:
+            if user.is_verified:
+                return render(request, 'accounts/account-login.html', {
+                    'form': UserLoginForm(),
+                    'message': 'Your email is already verified. Please login.'
+                })
+            else:
+                send_email(request, user)
+                message = 'A new verification email has been sent. Please check your inbox.'
+    context = {
+        'form': form,
+        'message': message,
+    }
+
+    return render(request, 'accounts/resend-email.html', context)
 
 
 class UserRegisterView(CreateView):
@@ -117,9 +125,12 @@ def user_login(request):
         if user is not None:
             if user.is_verified:
                 login(request, user)
+                print(request.get_full_path_info())
+                if request.GET.get('next'):
+                    return redirect(request.GET.get('next'))
                 return redirect('index')
             else:
-                message = 'You are not verified yet.'
+                message = 'Your email is not verified.'
         else:
             message = 'Invalid email or password.'
 

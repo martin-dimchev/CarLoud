@@ -80,6 +80,24 @@ p {
     margin: 5px 0 10px 0;
 }
 
+.project-delete-btn {
+    margin: 0 auto;
+    color:white
+}
+
+.project-delete-btn:hover {
+    margin: 0 auto;
+    color:white
+}
+
+.edit-project {
+    text-align: right;
+}
+
+.edit-project p{
+    margin-right: 0.5em;
+}
+
 
 .main-button a {
     font-size: 14px;
@@ -185,10 +203,10 @@ Header Style
 }
 
 
-/* 
+/*
 ---------------------------------------------
 Banner Style
---------------------------------------------- 
+---------------------------------------------
 */
 
 .main-banner {
@@ -218,10 +236,10 @@ Banner Style
     color: #5ce1e6;
 }
 
-/* 
+/*
 ---------------------------------------------
 Most Popular Style
---------------------------------------------- 
+---------------------------------------------
 */
 
 .most-popular {
@@ -288,9 +306,13 @@ Most Popular Style
 }
 
 .garage-items {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 2fr));
+    background-color: #1a1a1a;
+}
 
+.garage-items:hover {
+    filter: brightness(0.7);
+    transition: 0.3s ease;
+    border: 2px solid #5ce1e6;
 }
 
 .item {
@@ -308,6 +330,10 @@ Most Popular Style
     border-bottom: none;
     padding-bottom: 0px;
     margin-bottom: 0px;
+}
+
+.upload-image {
+    margin: 0 auto;
 }
 
 
@@ -328,109 +354,6 @@ footer p a:hover {
 }
 
 
-.featured-games {
-    border-radius: 23px;
-    background-color: #1f2122;
-    padding: 30px;
-}
-
-.featured-games .item .thumb {
-    position: relative;
-    overflow: hidden;
-}
-
-.featured-games .item .thumb .hover-effect {
-    position: absolute;
-    bottom: -100px;
-    text-align: center;
-    width: 100%;
-    opacity: 0;
-    visibility: hidden;
-    transition: all .4s;
-}
-
-.featured-games .item .thumb:hover .hover-effect {
-    opacity: 1;
-    visibility: visible;
-    bottom: 15px;
-}
-
-.featured-games .item .thumb .hover-effect h6 {
-    background-color: rgba(31, 33, 34, 0.95);
-    display: inline-block;
-    color: #5ce1e6;
-    font-weight: 600;
-    font-size: 14px;
-    padding: 10px 20px;
-    border-radius: 25px;
-}
-
-.featured-games .item img {
-    border-radius: 23px;
-}
-
-.featured-games .item h4 {
-    font-size: 15px;
-    margin-top: 20px;
-    margin-bottom: 0px;
-    display: inline-block;
-}
-
-.featured-games .item span {
-    color: #666;
-    display: block;
-    margin-top: 7px;
-    font-weight: 400;
-}
-
-.featured-games .item ul {
-    float: right;
-    margin-top: 20px;
-}
-
-.featured-games .item ul li {
-    text-align: right;
-    color: #fff;
-    font-size: 14px;
-}
-
-.featured-games .item ul li:first-child i {
-    color: yellow;
-}
-
-.featured-games .item ul li:last-child i {
-    color: #5ce1e6;
-}
-
-.featured-games .owl-nav {
-    position: absolute;
-    margin: 0 auto;
-    top: -70px;
-    right: 0;
-}
-
-.featured-games .owl-nav .owl-prev {
-    margin-right: 2.5px;
-}
-
-.featured-games .owl-nav .owl-next {
-    margin-left: 2.5px;
-}
-
-.featured-games .owl-nav .owl-prev span,
-.featured-games .owl-nav .owl-next span {
-    font-size: 36px;
-    display: inline-block;
-    color: #666;
-    opacity: 1;
-    transition: all .3s;
-}
-
-.featured-games .owl-nav .owl-prev span:hover,
-.featured-games .owl-nav .owl-next span:hover {
-    opacity: 1;
-    color: #5ce1e6;
-}
 
 .top-downloaded {
     border-radius: 23px;
@@ -684,7 +607,7 @@ body {
 
 
 .input-group .btn:hover {
-   color: #5ce1e6;
+    color: #5ce1e6;
 }
 
 
@@ -692,8 +615,15 @@ body {
     border: none;
 }
 
+.comment-text {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
 .comment-text p {
     padding: 5px 0 0 10px;
+
 }
 
 .comment-created-at {
@@ -720,6 +650,7 @@ body {
     border: 0;
     box-shadow: none;
 }
+
 .input-group .comment-add-btn:active {
     background-color: white;
     color: #5ce1e6;
@@ -732,6 +663,175 @@ body {
     color: #5ce1e6;
     border: 0;
     box-shadow: none;
+}
+
+.comment-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.delete-btn {
+    margin-top: 2px;
+    background-color: transparent;
+    border: 0;
+    color: #333;
+    padding: 0.25rem 0.6rem;
+}
+
+.comment-edit-area {
+    background-color: #333;
+    resize: vertical;
+    max-height: 200px;
+    min-height: 50px;
+    scrollbar-width: thin;
+    scrollbar-color: #888 #333;
+}
+
+.comment-edit-area::-webkit-scrollbar {
+    width: 8px;
+}
+
+.comment-edit-area::-webkit-scrollbar-thumb {
+    background-color: #5ce1e6;
+    border-radius: 10px;
+    border: 3px solid #333;
+}
+
+.comment-edit-area::-webkit-scrollbar-thumb:hover {
+    background-color: #5ce1e6;
+}
+
+.comment-edit-area::-webkit-scrollbar-track {
+    background-color: #444;
+    border-radius: 10px;
+}
+
+.comment-edit-area::-webkit-scrollbar-track:hover {
+    background-color: #555;
+}
+
+.comment-edit-area:focus {
+    background-color: #333;
+    color: #b3b3b3;
+    box-shadow: none;
+}
+
+.edit-btn {
+    margin-top: 2px;
+    color: #333;
+}
+
+.edit-btn:hover {
+    background-color: #5ce1e6;
+    color: white;
+}
+
+.save-btn {
+    margin-top: 2px;
+    background-color: transparent;
+    border: 0;
+    color: lawngreen;
+}
+
+.save-btn:hover {
+    background-color: transparent;
+}
+
+.save-btn:focus {
+    background-color: transparent;
+    border: 0;
+    box-shadow: none;
+}
+
+.save-btn:active {
+    background-color: transparent;
+    border: 0;
+    box-shadow: none;
+}
+
+.cancel-btn {
+    margin-top: 2px;
+    font-size: 1.1rem;
+    border: 0;
+    background-color: transparent;
+    color: red;
+}
+
+.cancel-btn:hover {
+    background-color: transparent;
+
+}
+
+.cancel-btn:focus {
+    background-color: transparent;
+    border: 0;
+    box-shadow: none;
+}
+
+.cancel-btn:active {
+    background-color: transparent;
+    border: 0;
+    box-shadow: none;
+}
+
+.copy-feedback {
+    font-size: 0.9rem;
+    color: #5ce1e6;
+    display: inline-block;
+}
+
+.auth-card {
+    width: 100%;
+    max-width: 400px;
+    background-color: #1e1e1e;
+    color: #f5f5f5;
+    border-radius: 12px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+    padding: 20px;
+}
+
+.auth-header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.auth-input {
+    background-color: #2b2b2b;
+    color: #f5f5f5;
+    border: 1px solid #444;
+    border-radius: 6px;
+}
+
+.auth-button {
+    background-color: #5ce1e6;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.auth-button:hover {
+    background-color: white;
+    color: #5ce1e6;
+}
+
+.auth-footer {
+    text-align: center;
+    margin-top: 15px;
+}
+
+.auth-link {
+    color: #5ce1e6;
+    text-decoration: none;
+}
+
+.auth-link:hover {
+    color: white;
 }
 
 
@@ -768,7 +868,6 @@ body {
 }
 
 
-
 .comment-section-btn:hover {
     color: #5ce1e6;
 }
@@ -782,15 +881,32 @@ body {
 }
 
 
-.project-details-images {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 2fr));
+.project-details {
+    background-color: #1a1a1a;
+    border-radius: 15px;
 }
 
-.project-image:hover {
-    opacity: 0.6;
+.project-details-list {
+    background-color: #1a1a1a;
+    border-radius: 15px;
 }
 
+.project-status {
+    font-size: 15px;
+    padding: 2px;
+    max-height: 27px;
+}
+
+.project-details-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.create-project-card {
+    margin: 0 auto;
+    max-width: 600px;
+}
 
 .start-stream .heading-section {
     margin-top: 60px;
@@ -817,108 +933,6 @@ body {
 }
 
 
-.live-stream {
-    margin-top: 60px;
-    border-radius: 23px;
-    background-color: #1f2122;
-    padding: 30px;
-}
-
-.live-stream .item {
-    margin-bottom: 30px;
-}
-
-.live-stream .thumb {
-    position: relative;
-    overflow: hidden;
-    margin-bottom: 20px;
-}
-
-.live-stream .thumb img {
-    border-radius: 23px;
-}
-
-.live-stream .thumb:hover .hover-effect {
-    opacity: 1;
-    visibility: visible;
-}
-
-.live-stream .hover-effect {
-    opacity: 0;
-    visibility: hidden;
-    transition: all .4s;
-}
-
-.live-stream .hover-effect .live a {
-    position: absolute;
-    background-color: rgba(236, 96, 144, 0.9);
-    padding: 5px 10px;
-    border-radius: 23px;
-    color: #fff;
-    font-size: 14px;
-    right: 15px;
-    top: 15px;
-}
-
-.live-stream .hover-effect ul {
-    position: absolute;
-    bottom: 20px;
-    text-align: center;
-    width: 100%;
-}
-
-.live-stream .hover-effect ul li {
-    display: inline-block;
-    margin: 0px 5px;
-}
-
-.live-stream .hover-effect ul li a {
-    background-color: rgba(236, 96, 144, 0.9);
-    padding: 5px 10px;
-    border-radius: 23px;
-    color: #fff;
-    font-size: 14px;
-}
-
-.live-stream .avatar img {
-    margin-right: 15px;
-}
-
-.live-stream span i {
-    color: #fff;
-    background-color: #5ce1e6;
-    border-radius: 50%;
-    font-size: 12px;
-    width: 20px;
-    height: 20px;
-    display: inline-block;
-    text-align: center;
-    line-height: 20px;
-    margin-right: 3px;
-}
-
-.live-stream span {
-    font-size: 14px;
-    color: #5ce1e6;
-}
-
-.live-stream .down-content h4 {
-    margin-top: 8px;
-    font-size: 20px;
-    font-weight: 700;
-    margin-left: 61px;
-}
-
-.live-stream .main-button {
-    text-align: center;
-    margin-bottom: -53px;
-}
-
-/* 
----------------------------------------------
-Featured Banner Style
---------------------------------------------- 
-*/
 
 .feature-banner .thumb {
     position: relative;
@@ -942,340 +956,51 @@ Featured Banner Style
     color: #5ce1e6;
 }
 
-/* 
----------------------------------------------
-Game Details Style
---------------------------------------------- 
-*/
-
-.game-details h2 {
-    font-size: 45px;
-    text-transform: uppercase;
-    text-align: center;
-    margin: 60px 0px;
+.profile-details {
+    background-color: #1a1a1a;
+    border-radius: 15px;
 }
 
-.game-details .content {
-    border-radius: 23px;
-    padding: 30px;
-    background-color: #1f2122;
+.profile-info {
+    border-radius: 15px;
 }
 
-.game-details .content .left-info {
-    background-color: #27292a;
-    border-radius: 23px;
-    padding: 30px;
-    margin-bottom: 30px;
-}
-
-.game-details .content .left-info .left {
-    float: left;
-}
-
-.game-details .content .left-info h4 {
-    font-size: 15px;
-    display: block;
-}
-
-.game-details .content .left-info span {
-    color: #666;
-    display: block;
-    margin-top: 7px;
-    font-weight: 400;
-}
-
-.game-details .content .left-info ul {
-    text-align: right;
-}
-
-.game-details .content .left-info ul li {
-    color: #fff;
-    font-size: 14px;
-    margin-bottom: 3px;
-}
-
-.game-details .content .left-info ul li:first-child i {
-    color: yellow;
-}
-
-.game-details .content .left-info ul li:last-child i {
+.profile-info strong {
     color: #5ce1e6;
 }
 
-.game-details .content .right-info {
-    background-color: #27292a;
-    border-radius: 23px;
-    padding: 30px;
-    margin-bottom: 30px;
+.profile-info-item {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
 }
 
-.game-details .content .right-info ul li {
-    display: inline-block;
-    width: 23%;
-    text-align: center;
-    font-size: 14px;
-    color: #fff;
+.image-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 0;
 }
 
-.game-details .content .right-info ul li i {
-    display: block;
-    margin-bottom: 12px;
-}
-
-.game-details .content .right-info ul li:first-child i {
-    color: yellow;
-}
-
-.game-details .content .right-info ul li i {
-    color: #5ce1e6;
-}
-
-.game-details .main-border-button {
-    margin-top: 35px;
-}
-
-.game-details .main-border-button a {
-    text-align: center;
-    width: 100%;
-}
-
-/* 
----------------------------------------------
-Other Related Style
---------------------------------------------- 
-*/
-
-.other-games {
-    border-radius: 23px;
-    padding: 30px 30px 0px 30px;
-    background-color: #1f2122;
-    margin-top: 60px;
-}
-
-.other-games .item {
+.image-container {
     position: relative;
-    border-bottom: 1px solid #27292a;
-    padding-bottom: 52px;
-    margin-bottom: 30px;
-}
-
-.other-games .item img {
-    float: left;
-    margin-right: 15px;
-}
-
-.other-games .item h4 {
-    display: inline-block;
-    font-size: 15px;
-    margin-bottom: 5px;
-    padding-top: 15px;
-}
-
-.other-games .item span {
-    color: #666;
-    font-size: 14px;
-    display: block;
-}
-
-.other-games ul {
-    position: absolute;
-    right: 0;
-    top: 15px;
-}
-
-.other-games ul li {
-    color: #fff;
-    font-size: 14px;
-    margin-bottom: 3px;
-}
-
-.other-games ul li:first-child i {
-    color: yellow;
-}
-
-.other-games ul li:last-child i {
-    color: #5ce1e6;
-}
-
-/* 
----------------------------------------------
-Top Streamers Style
---------------------------------------------- 
-*/
-
-.top-streamers {
-    border-radius: 23px;
-    background-color: #1f2122;
-    padding: 30px;
-    max-height: 567px;
-    min-height: 567px;
-}
-
-.top-streamers ul li {
-    display: inline-block;
     width: 100%;
-    border-bottom: 1px solid #353637;
-    margin-bottom: 25px;
-    padding-bottom: 25px;
+    height: 0;
+    padding-bottom: 100%;
+    overflow: hidden;
 }
 
-.top-streamers ul li:last-child {
-    border-bottom: none;
-    padding-bottom: 0px;
-    margin-bottom: 0px;
-}
-
-.top-streamers ul li span {
-    float: left;
-    font-size: 15px;
-    color: #fff;
-    font-weight: 700;
-    padding-top: 12px;
-    margin-right: 10px;
-}
-
-.top-streamers ul li h6 {
-    display: inline;
-    font-size: 14px;
-    color: #5ce1e6;
-    font-weight: 400;
-}
-
-.top-streamers ul li h6 i {
-    color: #fff;
-    background-color: #5ce1e6;
-    border-radius: 50%;
-    font-size: 12px;
-    width: 20px;
-    height: 20px;
-    display: inline-block;
-    text-align: center;
-    line-height: 20px;
-    margin-right: 3px;
-}
-
-.top-streamers ul li .main-button {
-    float: right;
-}
-
-.top-streamers ul li .main-button a {
-    padding: 8px 20px;
-}
-
-/* 
----------------------------------------------
-Profile Style
---------------------------------------------- 
-*/
-
-.main-profile {
-    border-radius: 23px;
-    padding: 30px;
-    background-color: #1f2122;
-}
-
-.main-profile .main-info span {
-    font-size: 14px;
-    color: #fff;
-    background-color: #5ce1e6;
-    padding: 8px 20px;
-    display: inline-block;
-    border-radius: 25px;
-    font-weight: 400;
-    text-transform: capitalize;
-    letter-spacing: 0.5px;
-    margin-bottom: 15px;
-}
-
-.main-profile .main-info h4 {
-    margin-bottom: 20px;
-}
-
-.main-profile .main-info .main-border-button {
-    margin-top: 25px;
-}
-
-.main-profile ul {
-    border-radius: 23px;
-    padding: 30px;
-    background-color: #27292a;
-}
-
-.main-profile ul li {
-    width: 100%;
-    font-size: 14px;
-    color: #666;
-    margin-bottom: 20px;
-    padding-bottom: 20px;
-    border-bottom: 1px solid #666;
-}
-
-.main-profile ul li span {
-    float: right;
-    font-weight: 500;
-    color: #5ce1e6;
-}
-
-.main-profile ul li:last-child {
-    border-bottom: none;
-    padding-bottom: 0;
-    margin-bottom: 0;
-}
-
-.clips {
-    margin-top: 30px;
-    border-top: 2px solid #27292a;
-}
-
-.clips .heading-section {
-    margin-top: 30px;
-}
-
-.clips .item {
-    border-radius: 23px;
-    padding: 30px 15px;
-    background-color: #27292a;
-    margin-bottom: 30px;
-}
-
-.clips .item .thumb {
-    position: relative;
-    margin-bottom: 15px;
-}
-
-.clips .item .thumb a {
+.image-container img {
     position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-23px, -23px);
-    width: 46px;
-    height: 46px;
-    background-color: #fff;
-    border-radius: 50%;
-    display: inline-block;
-    text-align: center;
-    line-height: 46px;
-    color: #5ce1e6;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: 0.3s ease;
 }
 
-.clips .item h4 {
-    font-size: 15px;
-    display: inline-block;
-}
-
-.clips .item span i {
-    color: #5ce1e6;
-}
-
-.clips .item span {
-    float: right;
-    color: #fff;
-    font-size: 14px;
-}
-
-.clips .main-button {
-    margin-top: 10px;
-    text-align: center;
+.image-container:hover img {
+    filter: brightness(0.7);
 }
 
 

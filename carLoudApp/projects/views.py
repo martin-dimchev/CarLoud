@@ -1,12 +1,14 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse, Http404
+from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, ListView, DetailView
-from rest_framework.status import HTTP_403_FORBIDDEN, HTTP_405_METHOD_NOT_ALLOWED, HTTP_404_NOT_FOUND
+from django.views import View
+from django.views.generic import CreateView, ListView, DetailView, UpdateView
+from rest_framework.status import HTTP_403_FORBIDDEN
 
-from carLoudApp.accounts.models import Follower
-from carLoudApp.projects.forms import ProjectCreationForm
+
+from carLoudApp.projects.forms import ProjectForm, ProjectImagesForm
 from carLoudApp.projects.models import Project, ProjectImages
 
 UserModel = get_user_model()
@@ -35,9 +37,8 @@ class GarageListView(LoginRequiredMixin, ListView):
 
 class ProjectCreateView(LoginRequiredMixin, CreateView):
     model = Project
-    form_class = ProjectCreationForm
+    form_class = ProjectForm
     template_name = 'projects/project-create.html'
-    success_url = reverse_lazy('index')
     login_url = reverse_lazy('user-login')
 
     def form_valid(self, form):
@@ -46,10 +47,13 @@ class ProjectCreateView(LoginRequiredMixin, CreateView):
         project.save()
         return super().form_valid(form)
 
+    def get_success_url(self):
+        return reverse_lazy('user-garage', kwargs={'pk': self.request.user.pk})
 
 class ProjectDetailView(LoginRequiredMixin, DetailView):
     model = Project
     template_name = 'projects/project-details.html'
+    login_url = 'user-login'
 
     def get_object(self, **kwargs):
         try:
@@ -62,6 +66,68 @@ class ProjectDetailView(LoginRequiredMixin, DetailView):
         if (self.request.user != project.user) and project.private:
             raise Http404
         return project
+
+def project_delete(request, pk):
+    try:
+        project = Project.objects.get(pk=pk)
+    except Project.DoesNotExist:
+        raise Http404
+
+    if request.method == 'POST':
+        if request.user == project.user:
+            project.delete()
+            return redirect(reverse_lazy('user-garage', kwargs={'pk': request.user.pk}))
+        return HttpResponse(HTTP_403_FORBIDDEN, 'You do not have permission to delete this project.')
+
+    return render(request, 'projects/project-delete.html', {'object': project})
+
+class ProjectUpdateView(LoginRequiredMixin, UpdateView):
+    model = Project
+    form_class = ProjectForm
+    template_name = 'projects/project-edit.html'
+
+    def get(self, request, *args, **kwargs):
+        project = self.get_object()
+        if project.user != request.user:
+            return HttpResponse(HTTP_403_FORBIDDEN, 'You do not have permission to edit this project.')
+        return super().get(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        project = form.save(commit=False)
+        user = self.request.user
+
+        if user != project.user:
+            return HttpResponse(HTTP_403_FORBIDDEN)
+        project.save()
+        return redirect(reverse_lazy('project-details', kwargs={'pk': project.pk}))
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        form = ProjectForm(instance=self.get_object())
+        context['form'] = form
+        return context
+
+class ProjectImageCreateView(LoginRequiredMixin, CreateView):
+    model = ProjectImages
+    form_class = ProjectImagesForm
+    template_name = 'projects/project-images-create.html'
+
+    def form_valid(self, form):
+        project_pk = self.kwargs.get('pk')
+        user = self.request.user
+
+        try:
+            project = Project.objects.get(pk=project_pk)
+        except Project.DoesNotExist:
+            raise Http404
+
+        if project.user == user:
+            image = form.save(commit=False)
+            image.project = project
+            image.user = user
+            image.save()
+            return redirect('project-details', pk=project.pk)
+        return HttpResponse(HTTP_403_FORBIDDEN)
 
 
 class ProjectImageDetailView(LoginRequiredMixin, DetailView):

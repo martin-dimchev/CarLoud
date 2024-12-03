@@ -1,9 +1,10 @@
-{% extends 'base.html' %}
-
-{% block content %}
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_div }}
-        <button>Create</button>
-    </form>
+{% extends 'project-form.html' %}
+{% block heading %}
+    <h4>Create project</h4>
+{% endblock %}
+{% block button %}
+    <button type="submit" class="btn auth-button">Create</button>
+{% endblock %}
+{% block back_link %}
+    <a href="{% url 'user-garage' request.user.pk %}">Back to garage</a>
 {% endblock %}

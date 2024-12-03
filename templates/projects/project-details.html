@@ -3,24 +3,65 @@
 {% load static %}
 
 {% block content %}
-    <div class="project-details-info">
-        <h3>{{ object.name }}</h3>
-        <p>Brand: {{ object.brand }}</p>
-        <p>Model: {{ object.model }}</p>
-        <p>Year: {{ object.year }}</p>
-        <p>Description: {{ object.description }}</p>
-        <p>Horsepower: {{ object.horsepower }}</p>
-        <p>Drivetrain: {{ object.drivetrain }}</p>
-        <p>Private: {{ object.private }}</p>
-        <p>Added on: {{ object.created_at }}</p>
-    </div>
-    <div class="project-details-images">
-        {% for project_image in object.images.all %}
-            <a href="{% url 'project-image' project_image.project.pk project_image.pk %}">
-            <div class="project-image-container">
-                {% cloudinary project_image.image class="project-image" %}
+    <a href="{% url 'user-garage' object.user.pk %}">Back to garage</a>
+    <div class="card my-2 project-details">
+        <div class="card-body">
+            <div class="project-details-header">
+                <h3 class="card-title">{{ object.title }}</h3>
+                {% if object.private %}
+                    <div class="alert alert-danger project-status">Private</div>
+                {% else %}
+                    <div class="alert alert-success project-status">Public</div>
+                {% endif %}
             </div>
+            <ul class="list-group list-group-flush project-details-list">
+                <li class="list-group-item"><strong>Make:</strong> {{ object.make }}</li>
+                <li class="list-group-item"><strong>Model:</strong> {{ object.model }}</li>
+                <li class="list-group-item"><strong>Year:</strong> {{ object.year }}</li>
+                <li class="list-group-item"><strong>Description:</strong> {{ object.description }}</li>
+                <li class="list-group-item"><strong>Horsepower:</strong> {{ object.horsepower }}</li>
+                <li class="list-group-item"><strong>Drivetrain:</strong> {{ object.drivetrain }}</li>
+                <li class="list-group-item"><strong>Added on:</strong> {{ object.created_at|date:"F j, Y" }}</li>
+            </ul>
+            {% if request.user == object.user %}
+                <div class="mt-1 edit-project">
+                    <p><a href="{% url 'project-edit' object.pk %}">Edit</a></p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    {% if request.user == object.user %}
+        <div class="text-center mt-4">
+            <a href="#" class="project-delete-btn">
+                <a href="{% url 'project-delete' object.pk %}">
+                    <button class="btn btn-danger">Delete</button>
+                </a>
             </a>
+        </div>
+        <hr class="my-4">
+        <div class="text-center my-4">
+
+            <a href="{% url 'project-image-add' object.pk %}">
+                <button class="btn btn-primary">Add photo</button>
+            </a>
+
+        </div>
+    {% else %}
+        <hr class="my-4">
+    {% endif %}
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        {% for project_image in object.images.all %}
+            <div class="col">
+                <a href="{% url 'project-image' project_image.project.pk project_image.pk %}"
+                   class="text-decoration-none">
+                    <div class="card h-100 shadow-sm">
+                        <div class="image-container">
+                            {% cloudinary project_image.image class="card-img-top" %}
+                        </div>
+                    </div>
+                </a>
+            </div>
         {% endfor %}
     </div>
+
 {% endblock %}

@@ -1,26 +1,49 @@
 {% extends 'base.html' %}
+{% load static %}
 {% load cloudinary %}
 
 {% block content %}
-    <div class="profile-library">
+    <div class="text-center mb-4">
+        <h2><a href="{% url 'user-details' projects_user.pk %}"><em>{{ projects_user.username }}'s</em></a> Garage</h2>
+        <hr class="my-4">
+        {% if request.user.pk == projects_user.pk %}
+        <a href="{% url 'project-create' %}"><button class="btn btn-primary">New project</button></a>
+        {% endif %}
+    </div>
+    <div class="row">
         <div class="col-lg-12">
-            <div class="heading-section">
-                <h4><em>{{ projects_user.username }}'s</em> Garage</h4>
-            </div>
-            <div class="garage-items">
+            <div class="row row-cols-1 row-cols-md-3 g-4">
                 {% for project in object_list %}
-                    <div class="item">
-                        <a href="{% url 'project-details' project.pk %}">
-                        <ul>
-                            <li>{% cloudinary project.images.first.image class="projects-image" %}</li>
-                            <li><h6>{{ project.name }}</h6>
-                            <li><p>{{ project.brand }} {{ project.model }}</p></li>
-                        </ul>
+                    <div class="col">
+                        <a href="{% url 'project-details' project.pk %}" class="text-decoration-none">
+                            <div class="card h-100 shadow-sm garage-items">
+
+                                {% if project.images.first.image %}
+                                    <div class="image-container">
+                                    {% cloudinary project.images.first.image class="card-img-top" %}
+                                    </div>
+                                {% else %}
+                                    <div class="image-container">
+                                        <img
+                                                src="{% static 'assets/images/default-car.png' %}"
+                                                class="card-img-top"
+                                                alt="Default Car Image"
+                                        >
+                                    </div>
+                                {% endif %}
+                                <div class="card-body">
+                                    <h5>{{ project.title }}</h5>
+
+                                    <p>
+                                        {{ project.make }} {{ project.model }}
+                                    </p>
+                                </div>
+                                </div>
                         </a>
                     </div>
                 {% endfor %}
             </div>
         </div>
     </div>
-
+    
 {% endblock %}

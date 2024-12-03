@@ -23,10 +23,13 @@ class Project(models.Model):
         max_length=40,
     )
     year = models.PositiveIntegerField()
-    description = models.TextField()
-    horsepower = models.FloatField(
-        MinValueValidator(0, 'Horsepower can not be less than zero'),
-        help_text='Horsepower'
+    description = models.TextField(
+        null=True,
+        blank=True,
+    )
+    horsepower = models.PositiveIntegerField(
+        null=True,
+        blank=True,
     )
     drivetrain = models.CharField(
         max_length=3,
@@ -41,7 +44,7 @@ class Project(models.Model):
 
     @property
     def make_and_model(self):
-        return f'{self.title} {self.model}'
+        return f'{self.make} {self.model}'
 
 class ProjectImages(models.Model):
     project = models.ForeignKey(

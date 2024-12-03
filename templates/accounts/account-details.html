@@ -3,76 +3,91 @@
 {% load cloudinary %}
 
 {% block content %}
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="main-profile ">
-                <div class="row">
-                    <div class="col-lg-4">
-
-                        {% if object.profile.image %}
-                            {% cloudinary object.profile.image %}
-                        {% else %}
-                            <img
-                                    src="{% static 'assets/images/anonymous-user.jpg' %}"
-                                    alt="profile-image"
-                            >
-                        {% endif %}
-                    </div>
-
-                    <div class="col-lg-4 align-self-center">
-                        <div class="main-info header-text">
-
-                            {% if request.user != object %}
-                                <form method="POST" action="{% url 'user-follow' object.pk %}">
-                                    {% csrf_token %}
-                                    <button>
-                                        {% if request.user.pk in followers_pks %}
-                                            Unfollow
-                                        {% else %}
-                                            Follow
-                                        {% endif %}
-                                    </button>
-                                </form>
-                            {% endif %}
-
-                            <h4>{{ object.username }}</h4>
-                            <p>You Haven't Gone Live yet. Go Live By Touching The Button Below.</p>
-                            {% if request.user == object %}
-                                <div class="main-border-button">
-
-                                    <form method="post" action="{% url 'user-logout' object.pk %}">
-                                        {% csrf_token %}
-                                        <div class="main-button">
-                                            <button class="main-button">Logout</button>
-                                        </div>
-                                    </form>
-                                </div>
+    <div class="container my-5">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card shadow-sm profile-details">
+                    <div class="row g-0">
+                        <div class="col-md-4 text-center p-3">
+                            {% if object.profile.image %}
+                                {% cloudinary object.profile.image class="img-fluid rounded-circle" %}
+                            {% else %}
+                                <img
+                                        src="{% static 'assets/images/anonymous-user.jpg' %}"
+                                        alt="profile-image"
+                                        class="img-fluid rounded-circle"
+                                >
                             {% endif %}
                         </div>
+                        <div class="col-md-4 align-self-center text-center">
+                            <div class="p-3">
+                                <h4>{{ object.username }}</h4>
+                                {% if object.profile.bio %}
+                                    <p>{{ object.profile.bio }}</p>
+                                {% endif %}
+                                {% if request.user != object %}
+                                    <form method="POST" action="{% url 'user-follow' object.pk %}">
+                                        {% csrf_token %}
+                                        <button class="btn btn-primary">
+                                            {% if request.user.pk in followers_pks %}
+                                                Unfollow
+                                            {% else %}
+                                                Follow
+                                            {% endif %}
+                                        </button>
+                                    </form>
+                                {% endif %}
+                                {% if request.user == object %}
+                                    <form method="post" action="{% url 'user-logout' object.pk %}">
+                                        {% csrf_token %}
+                                        <button class="btn btn-danger mt-2">Logout</button>
+                                    </form>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-md-4 align-self-center">
+                            <div class="p-3">
+                                <ul class="list-group list-group-flush profile-info">
+                                    <li class="list-group-item profile-info-item">
+                                        <p>Project Cars: </p>
+                                        <p><strong>{{ projects.count }}</strong></p>
+                                    </li>
+                                    <li class="list-group-item profile-info-item">
+                                        <p>Photos: </p>
+                                        <p><strong>{{ images.count }}</strong></p>
+                                    </li>
+                                    <li class="list-group-item profile-info-item">
+                                        <p>Followers: </p>
+                                        <p><strong>{{ object.followers.count }}</strong></p>
+                                    </li>
+                                    <li class="list-group-item profile-info-item">
+                                        <p>Following: </p>
+                                        <p><strong>{{ object.following.count }}</strong></p>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
-                    <div class="col-lg-4 align-self-center">
-                        <ul>
-                            <li>Project cars<span>{{ projects.count }}</span></li>
-                            <li>Photos<span>{{ images.count }}</span></li>
-                            <li>Followers<span>{{ object.followers.count }}</span></li>
-                            <li>Following<span>{{ object.following.count }}</span></li>
-                        </ul>
+                </div>
+
+                <div class="mt-4 text-center">
+                    {% if images %}
+                        <h5 class="mb-2">Posts</h5>
+                    {% else %}
+                        <h5 class="mb-2">No posts</h5>
+                    {% endif %}
+                    <hr class="my-4">
+                    <div class="image-grid">
+                        {% for project_image in images %}
+                            <a href="{% url 'project-image' project_image.project.pk project_image.pk %}"
+                               class="image-container">
+                                {% cloudinary project_image.image class="img-fluid" %}
+                            </a>
+                        {% endfor %}
                     </div>
                 </div>
             </div>
-                <div class="project-details-images">
-                    {% for project_image in images %}
-                        <a href="{% url 'project-image' project_image.project.pk project_image.pk %}">
-                            <div class="project-image-container">
-                                {% cloudinary project_image.image class="project-image" %}
-                            </div>
-                        </a>
-                    {% endfor %}
-                </div>
         </div>
     </div>
-    </div>
-
-
-
 {% endblock %}
+
