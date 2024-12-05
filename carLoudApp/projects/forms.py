@@ -1,6 +1,6 @@
 from django import forms
 
-from carLoudApp.projects.models import Project, ProjectImages
+from carLoudApp.projects.models import Project, ProjectPosts
 
 
 from django import forms
@@ -33,7 +33,7 @@ class ProjectForm(forms.ModelForm):
 
 class ProjectImagesForm(forms.ModelForm):
     class Meta:
-        model = ProjectImages
+        model = ProjectPosts
         fields = ['image', 'caption']
         widgets = {
             'image': forms.FileInput(attrs={'class': 'form-control auth-input'}),

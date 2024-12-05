@@ -34,7 +34,7 @@
         <div class="text-center mt-4">
             <a href="#" class="project-delete-btn">
                 <a href="{% url 'project-delete' object.pk %}">
-                    <button class="btn btn-danger">Delete</button>
+                    <button class="btn btn-danger">Delete Project</button>
                 </a>
             </a>
         </div>
@@ -42,7 +42,7 @@
         <div class="text-center my-4">
 
             <a href="{% url 'project-image-add' object.pk %}">
-                <button class="btn btn-primary">Add photo</button>
+                <button class="btn btn-primary">Add posts</button>
             </a>
 
         </div>
@@ -50,13 +50,13 @@
         <hr class="my-4">
     {% endif %}
     <div class="row row-cols-1 row-cols-md-3 g-4">
-        {% for project_image in object.images.all %}
+        {% for post in object.posts.all %}
             <div class="col">
-                <a href="{% url 'project-image' project_image.project.pk project_image.pk %}"
+                <a href="{% url 'project-post-details' post.project.pk post.pk %}"
                    class="text-decoration-none">
                     <div class="card h-100 shadow-sm">
                         <div class="image-container">
-                            {% cloudinary project_image.image class="card-img-top" %}
+                            {% cloudinary post.image class="card-img-top" %}
                         </div>
                     </div>
                 </a>

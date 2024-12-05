@@ -18,9 +18,9 @@
                         <a href="{% url 'project-details' project.pk %}" class="text-decoration-none">
                             <div class="card h-100 shadow-sm garage-items">
 
-                                {% if project.images.first.image %}
+                                {% if project.posts.first.image %}
                                     <div class="image-container">
-                                    {% cloudinary project.images.first.image class="card-img-top" %}
+                                    {% cloudinary project.posts.first.image class="card-img-top" %}
                                     </div>
                                 {% else %}
                                     <div class="image-container">

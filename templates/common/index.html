@@ -7,7 +7,6 @@
         <div class="row">
             <div class="col-lg-7">
                 <div class="header-text">
-
                     <h4><em>Explore the craziest car builds here</em>.</h4>
                     <div class="main-button">
                         <a href="{% url 'dashboard' %}">Explore Now</a>
@@ -17,30 +16,34 @@
         </div>
     </div>
 
-    <div class="most-popular">
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="heading-section">
-                    <h4><em>Most Popular</em> Right Now</h4>
+    <div class="most-popular py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 text-center mb-4">
+                    <div class="heading-section">
+                        <h4><em>Most Popular</em> Right Now</h4>
+                    </div>
                 </div>
-                <div class="row">
-                    {% for object in object_list %}
-                        <div class="col-lg-3 col-sm-6">
-                            <a href="{% url 'dashboard' %}#image-{{ object.pk }}">
-                                <div class="item">
-                                    {% cloudinary object.image %}
-                                    <h4>{{ object.project.name }}<br><span>{{ object.project.make_and_model }}</span>
-                                    </h4>
-                                    <ul>
-                                        <li><span>Likes</span>{{ object.likes.count }}</li>
-                                    </ul>
+            </div>
+            <div class="row">
+                {% for object in object_list %}
+                    <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                        <a href="{% url 'dashboard' %}#image-{{ object.pk }}" class="text-decoration-none">
+                            <div class="p-3 most-popular-item">
+                                <div class="image-container mb-2">
+                                    {% cloudinary object.image class="img-fluid rounded-3" %}
                                 </div>
-                            </a>
-                        </div>
-                    {% endfor %}
-
-                </div>
+                                <h5 class="mb-1">{{ object.project.name }}</h5>
+                                <p class="text-muted mb-2">{{ object.project.make_and_model }}</p>
+                                <div>
+                                    Likes: {{ object.likes.count }}
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                {% endfor %}
             </div>
         </div>
     </div>
 {% endblock %}
+s

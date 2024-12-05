@@ -2,7 +2,7 @@ from django import template
 from django.db import ProgrammingError
 
 from carLoudApp.interactions.models import Like
-from carLoudApp.projects.models import  ProjectImages
+from carLoudApp.projects.models import  ProjectPosts
 
 register = template.Library()
 

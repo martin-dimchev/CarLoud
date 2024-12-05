@@ -46,11 +46,11 @@ class Project(models.Model):
     def make_and_model(self):
         return f'{self.make} {self.model}'
 
-class ProjectImages(models.Model):
+class ProjectPosts(models.Model):
     project = models.ForeignKey(
         Project,
         on_delete=models.CASCADE,
-        related_name='images',
+        related_name='posts',
     )
     image = CloudinaryField('project_image')
     caption = models.TextField(

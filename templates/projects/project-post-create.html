@@ -1,0 +1,11 @@
+{% extends 'project-post-form.html' %}
+
+{% block post_image_heading %}
+    <h3 class="text-center mb-4">Add photo</h3>
+{% endblock %}
+{% block button %}
+    <button type="submit" class="btn btn-primary w-100 auth-button">Add</button>
+{% endblock %}
+{% block back_link %}
+    <a href="{% url 'project-details' object.pk %}" >Back to project details</a>
+{% endblock %}

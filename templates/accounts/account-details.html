@@ -26,26 +26,25 @@
                                     <p>{{ object.profile.bio }}</p>
                                 {% endif %}
                                 {% if request.user != object %}
-                                    <form method="POST" action="{% url 'user-follow' object.pk %}">
-                                        {% csrf_token %}
-                                        <button class="btn btn-primary">
-                                            {% if request.user.pk in followers_pks %}
-                                                Unfollow
-                                            {% else %}
-                                                Follow
-                                            {% endif %}
-                                        </button>
-                                    </form>
+
+                                    <button class="btn btn-primary mt-4" id="follow-btn" data-follow-id="{{ object.pk }}">
+                                        {% if request.user.pk in followers_pks %}
+                                            Unfollow
+                                        {% else %}
+                                            Follow
+                                        {% endif %}
+                                    </button>
                                 {% endif %}
                                 {% if request.user == object %}
                                     <form method="post" action="{% url 'user-logout' object.pk %}">
                                         {% csrf_token %}
-                                        <button class="btn btn-danger mt-2">Logout</button>
+                                        <button class="btn btn-danger mt-4">Logout</button>
                                     </form>
                                 {% endif %}
                             </div>
                         </div>
                         <div class="col-md-4 align-self-center">
+                            <h5 class="text-center mb-2"><a href="{% url 'user-garage' object.pk%}">to Garage...</a></h5>
                             <div class="p-3">
                                 <ul class="list-group list-group-flush profile-info">
                                     <li class="list-group-item profile-info-item">
@@ -53,12 +52,12 @@
                                         <p><strong>{{ projects.count }}</strong></p>
                                     </li>
                                     <li class="list-group-item profile-info-item">
-                                        <p>Photos: </p>
-                                        <p><strong>{{ images.count }}</strong></p>
+                                        <p>Posts: </p>
+                                        <p><strong>{{ posts.count }}</strong></p>
                                     </li>
                                     <li class="list-group-item profile-info-item">
                                         <p>Followers: </p>
-                                        <p><strong>{{ object.followers.count }}</strong></p>
+                                        <p id="followers-count"><strong>{{ object.followers.count }}</strong></p>
                                     </li>
                                     <li class="list-group-item profile-info-item">
                                         <p>Following: </p>
@@ -71,17 +70,17 @@
                 </div>
 
                 <div class="mt-4 text-center">
-                    {% if images %}
+                    {% if posts %}
                         <h5 class="mb-2">Posts</h5>
                     {% else %}
                         <h5 class="mb-2">No posts</h5>
                     {% endif %}
                     <hr class="my-4">
                     <div class="image-grid">
-                        {% for project_image in images %}
-                            <a href="{% url 'project-image' project_image.project.pk project_image.pk %}"
+                        {% for post in posts %}
+                            <a href="{% url 'project-post-details' post.project.pk post.pk %}"
                                class="image-container">
-                                {% cloudinary project_image.image class="img-fluid" %}
+                                {% cloudinary post.image class="img-fluid" %}
                             </a>
                         {% endfor %}
                     </div>

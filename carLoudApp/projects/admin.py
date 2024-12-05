@@ -1,10 +1,10 @@
 from django.contrib import admin
 
-from carLoudApp.projects.models import Project, ProjectImages
+from carLoudApp.projects.models import Project, ProjectPosts
 
 
 class ProjectImageInline(admin.StackedInline):
-    model = ProjectImages
+    model = ProjectPosts
     can_delete = False
     verbose_name_plural = 'Project Images'
 

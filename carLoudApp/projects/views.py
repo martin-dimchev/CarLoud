@@ -1,17 +1,32 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse, Http404
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render, get_object_or_404
 from django.urls import reverse_lazy
-from django.views import View
 from django.views.generic import CreateView, ListView, DetailView, UpdateView
 from rest_framework.status import HTTP_403_FORBIDDEN
 
-
 from carLoudApp.projects.forms import ProjectForm, ProjectImagesForm
-from carLoudApp.projects.models import Project, ProjectImages
+from carLoudApp.projects.models import Project, ProjectPosts
 
 UserModel = get_user_model()
+
+
+class ProjectCreateView(LoginRequiredMixin, CreateView):
+    model = Project
+    form_class = ProjectForm
+    template_name = 'projects/project-create.html'
+    login_url = reverse_lazy('user-login')
+
+    def form_valid(self, form):
+        project = form.save(commit=False)
+        project.user = self.request.user
+        project.save()
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse_lazy('user-garage', kwargs={'pk': self.request.user.pk})
+
 
 class GarageListView(LoginRequiredMixin, ListView):
     model = Project
@@ -35,51 +50,18 @@ class GarageListView(LoginRequiredMixin, ListView):
         return context
 
 
-class ProjectCreateView(LoginRequiredMixin, CreateView):
-    model = Project
-    form_class = ProjectForm
-    template_name = 'projects/project-create.html'
-    login_url = reverse_lazy('user-login')
-
-    def form_valid(self, form):
-        project = form.save(commit=False)
-        project.user = self.request.user
-        project.save()
-        return super().form_valid(form)
-
-    def get_success_url(self):
-        return reverse_lazy('user-garage', kwargs={'pk': self.request.user.pk})
-
 class ProjectDetailView(LoginRequiredMixin, DetailView):
     model = Project
     template_name = 'projects/project-details.html'
     login_url = 'user-login'
 
-    def get_object(self, **kwargs):
-        try:
-            project =  Project.objects.get(pk=self.kwargs['pk'])
-        except Project.DoesNotExist:
-            raise Http404
+    def get(self, request, *args, **kwargs):
+        project = self.get_object()
 
-        print(self.request.user)
-        print(project.user)
         if (self.request.user != project.user) and project.private:
-            raise Http404
-        return project
+            return HttpResponse(HTTP_403_FORBIDDEN, 'You are not allowed to view this project')
+        return super().get(request, *args, **kwargs)
 
-def project_delete(request, pk):
-    try:
-        project = Project.objects.get(pk=pk)
-    except Project.DoesNotExist:
-        raise Http404
-
-    if request.method == 'POST':
-        if request.user == project.user:
-            project.delete()
-            return redirect(reverse_lazy('user-garage', kwargs={'pk': request.user.pk}))
-        return HttpResponse(HTTP_403_FORBIDDEN, 'You do not have permission to delete this project.')
-
-    return render(request, 'projects/project-delete.html', {'object': project})
 
 class ProjectUpdateView(LoginRequiredMixin, UpdateView):
     model = Project
@@ -103,42 +85,121 @@ class ProjectUpdateView(LoginRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        form = ProjectForm(instance=self.get_object())
+        form = self.form_class(instance=self.get_object())
         context['form'] = form
         return context
 
-class ProjectImageCreateView(LoginRequiredMixin, CreateView):
-    model = ProjectImages
+
+def project_delete(request, pk):
+    project = get_object_or_404(Project, pk=pk)
+
+    if project.user != request.user:
+        return HttpResponse(HTTP_403_FORBIDDEN, 'You do not have permission to delete this project.')
+
+    if request.method == 'POST':
+        project.delete()
+        return redirect(reverse_lazy('user-garage', kwargs={'pk': request.user.pk}))
+
+    context = {
+        'object': project,
+        'text': 'this project',
+    }
+    return render(request, 'projects/confirm-delete.html', context)
+
+
+class ProjectPostCreateView(LoginRequiredMixin, CreateView):
+    model = ProjectPosts
     form_class = ProjectImagesForm
-    template_name = 'projects/project-images-create.html'
+    template_name = 'projects/project-post-create.html'
 
     def form_valid(self, form):
         project_pk = self.kwargs.get('pk')
         user = self.request.user
-
-        try:
-            project = Project.objects.get(pk=project_pk)
-        except Project.DoesNotExist:
-            raise Http404
+        project = get_object_or_404(Project, pk=project_pk)
 
         if project.user == user:
             image = form.save(commit=False)
             image.project = project
             image.user = user
             image.save()
-            return redirect('project-details', pk=project.pk)
+            return redirect(reverse_lazy('project-details', kwargs={'pk': project.pk}))
+        return HttpResponse(HTTP_403_FORBIDDEN, 'You do not have permission to add post to this project.')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        project = get_object_or_404(Project, pk=self.kwargs.get('pk'))
+        context['object'] = project
+        return context
+
+
+class ProjectPostDetailView(LoginRequiredMixin, DetailView):
+    model = ProjectPosts
+    template_name = 'projects/project-post-details.html'
+    pk_url_kwarg = 'post_pk'
+
+    def get(self, request, *args, **kwargs):
+        post = get_object_or_404(ProjectPosts, pk=self.kwargs.get('post_pk'))
+        project = get_object_or_404(Project, pk=self.kwargs.get('pk'))
+
+        if post not in project.posts.all():
+            raise Http404
+
+        if (self.request.user != post.project.user) and post.project.private:
+            return HttpResponse(HTTP_403_FORBIDDEN, 'You do not have permission to view this image')
+
+        return super().get(request, *args, **kwargs)
+
+
+
+class ProjectPostEditView(LoginRequiredMixin, UpdateView):
+    model = ProjectPosts
+    form_class = ProjectImagesForm
+    template_name = 'projects/project-post-edit.html'
+    pk_url_kwarg = 'post_pk'
+
+    def get(self, request, *args, **kwargs):
+        post = self.get_object()
+        project = get_object_or_404(Project, pk=self.kwargs.get('pk'))
+
+        if post not in project.posts.all():
+            raise Http404
+
+        if post.project.user != request.user:
+            return HttpResponse(HTTP_403_FORBIDDEN, 'You do not have permission to edit this post')
+
+        return super().get(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        form = self.form_class(instance=self.get_object())
+        context['form'] = form
+        return context
+
+    def form_valid(self, form):
+        project_post = get_object_or_404(ProjectPosts, pk=self.kwargs.get('post_pk'))
+
+        if project_post.project.user == self.request.user:
+            image = form.save()
+            return redirect(reverse_lazy('project-post-details', kwargs={'pk': image.project.pk, 'post_pk': image.pk}))
         return HttpResponse(HTTP_403_FORBIDDEN)
 
 
-class ProjectImageDetailView(LoginRequiredMixin, DetailView):
-    model = ProjectImages
-    template_name = 'projects/project-image-details.html'
+def project_post_delete(request, pk, post_pk):
+    post = get_object_or_404(ProjectPosts, pk=post_pk)
+    project = get_object_or_404(Project, pk=pk)
 
-    def get_object(self, queryset=None):
-        try:
-            image = ProjectImages.objects.get(pk=self.kwargs['image_pk'])
-        except ProjectImages.DoesNotExist:
-            raise Http404
-        if (self.request.user != image.project.user) and image.project.private:
-            raise Http404
-        return image
+    if post not in project.posts.all():
+        raise Http404
+    elif project.user != request.user:
+        return HttpResponse(HTTP_403_FORBIDDEN, 'You do not have permission to delete this project.')
+
+    if request.method == 'POST':
+        post.delete()
+        return redirect(reverse_lazy('project-details', kwargs={'pk': pk}))
+
+    context = {
+        'object': post,
+        'text': 'this post',
+    }
+
+    return render(request, 'projects/confirm-delete.html', context)

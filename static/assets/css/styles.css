@@ -11,6 +11,11 @@ html, body {
     -moz-osx-font-smoothing: grayscale;
 }
 
+body {
+    background-color: #121212;
+    color: #ffffff;
+}
+
 a {
     color: #CCC;
     text-decoration: none !important;
@@ -60,7 +65,23 @@ p {
     font-size: 15px;
     color: #666;
     line-height: 30px;
-    margin-bottom: 0px;
+    margin-bottom: 0;
+}
+
+footer p {
+    text-align: center;
+    padding: 30px 0;
+    color: #fff;
+    font-weight: 300;
+}
+
+footer p a {
+    color: #fff;
+    transition: all .3s;
+}
+
+footer p a:hover {
+    color: #5ce1e6;
 }
 
 ::selection {
@@ -170,14 +191,44 @@ section {
 }
 
 
-/*
----------------------------------------------
-Header Style
---------------------------------------------- 
-*/
+.btn-primary {
+    border: 0;
+    background-color: #5ce1e6;
+    color: white;
+    box-shadow: none;
+    border-radius: 10px;
+}
+
+.btn-primary:hover {
+    border: 0;
+    background-color: white;
+    color: #5ce1e6;
+    box-shadow: none;
+}
+
+.btn-primary:focus {
+    border: 0;
+    background-color: white;
+    color: #5ce1e6;
+    box-shadow: none;
+}
+
+.btn-primary:active {
+    border: 0;
+    background-color: white;
+    color: #5ce1e6;
+    box-shadow: none;
+}
+
+.btn-danger {
+    border: 0;
+    color: white;
+    box-shadow: none;
+    border-radius: 10px;
+}
 
 .navbar {
-    background-color: #1a1a1a; /* Dark background */
+    background-color: #1a1a1a;
 }
 
 .nav-logo {
@@ -202,13 +253,7 @@ Header Style
     color: #5ce1e6;
 }
 
-
-/*
----------------------------------------------
-Banner Style
----------------------------------------------
-*/
-
+/* Home */
 .main-banner {
     background-image: url(../images/banner-bg.jpg);
     background-position: center center;
@@ -216,13 +261,6 @@ Banner Style
     min-height: 380px;
     border-radius: 23px;
     padding: 80px 60px;
-}
-
-.main-banner h6 {
-    font-size: 20px;
-    color: #fff;
-    font-weight: 400;
-    margin-bottom: 25px;
 }
 
 .main-banner h4 {
@@ -236,12 +274,6 @@ Banner Style
     color: #5ce1e6;
 }
 
-/*
----------------------------------------------
-Most Popular Style
----------------------------------------------
-*/
-
 .most-popular {
     margin-top: 60px;
     padding: 30px;
@@ -249,61 +281,18 @@ Most Popular Style
     border-radius: 23px;
 }
 
-.most-popular .item {
-    background-color: #27292a;
-    padding: 30px 15px;
-    border-radius: 23px;
-    margin-bottom: 30px;
-}
 
-.most-popular .item .item {
-    padding: 0px;
-    border-radius: 0px;
+.most-popular-item{
+    border: 1px solid white;
+    border-radius: 13px;
     background-color: transparent;
-    margin-bottom: 0px;
+    margin-bottom: 0;
 }
 
-.most-popular .item img {
-    border-radius: 23px;
+.most-popular-item:hover{
+    border-color: #5ce1e6;
 }
 
-.most-popular .item h4 {
-    font-size: 15px;
-    margin-top: 20px;
-    margin-bottom: 0px;
-    display: inline-block;
-}
-
-.most-popular .item span {
-    color: #666;
-    display: block;
-    margin-top: 7px;
-    font-weight: 400;
-}
-
-.most-popular .item ul {
-    float: right;
-    margin-top: 20px;
-}
-
-.most-popular .item ul li {
-    text-align: right;
-    color: #fff;
-    font-size: 14px;
-}
-
-.most-popular .item ul li:first-child i {
-    color: yellow;
-}
-
-.most-popular .item ul li:last-child i {
-    color: #5ce1e6;
-}
-
-.most-popular .main-button {
-    text-align: center;
-    margin-bottom: -53px;
-}
 
 .garage-items {
     background-color: #1a1a1a;
@@ -328,106 +317,16 @@ Most Popular Style
 
 .profile-garage .last-item {
     border-bottom: none;
-    padding-bottom: 0px;
-    margin-bottom: 0px;
+    padding-bottom: 0;
+    margin-bottom: 0;
 }
 
 .upload-image {
     margin: 0 auto;
 }
 
+/*Dashboard*/
 
-footer p {
-    text-align: center;
-    padding: 30px 0px;
-    color: #fff;
-    font-weight: 300;
-}
-
-footer p a {
-    color: #fff;
-    transition: all .3s;
-}
-
-footer p a:hover {
-    color: #5ce1e6;
-}
-
-
-
-.top-downloaded {
-    border-radius: 23px;
-    background-color: #1f2122;
-    padding: 30px;
-    max-height: 567px;
-    min-height: 567px;
-}
-
-.top-downloaded ul li {
-    position: relative;
-    display: inline-block;
-    width: 100%;
-}
-
-.top-downloaded ul li img {
-    float: left;
-    margin-right: 15px;
-}
-
-.top-downloaded ul li h4 {
-    font-size: 15px;
-    padding-top: 7px;
-}
-
-.top-downloaded ul li h6 {
-    font-size: 15px;
-    color: #666;
-    font-weight: 400;
-    margin-top: 5px;
-    margin-bottom: 5px;
-}
-
-.top-downloaded ul li span {
-    color: #fff;
-    font-size: 15px;
-    margin-right: 10px;
-}
-
-.top-downloaded ul li .download i {
-    position: absolute;
-    right: 0;
-    top: 50%;
-    transform: translateY(-23px);
-    width: 46px;
-    height: 46px;
-    text-align: center;
-    line-height: 46px;
-    color: #5ce1e6;
-    background-color: #27292a;
-    border-radius: 50%;
-}
-
-.top-downloaded ul li {
-    border-bottom: 1px solid #27292a;
-    margin-bottom: 28px;
-    padding-bottom: 28px;
-}
-
-.top-downloaded .text-button {
-    text-align: center;
-}
-
-.top-downloaded .text-button a {
-    font-weight: 600;
-    color: #5ce1e6;
-    font-size: 15px;
-}
-
-/* 
----------------------------------------------
-Dashboard
---------------------------------------------- 
-*/
 .search-container {
 
     background-color: #1f2122; /* Dark gray background */
@@ -464,7 +363,6 @@ button:hover {
 
 .post {
     border-radius: 8px;
-    margin-bottom: 20px;
     overflow: hidden;
 }
 
@@ -506,7 +404,7 @@ button:hover {
 }
 
 .action-buttons i:hover {
-    color: #5ce1e6; /* Highlight on hover */
+    color: #5ce1e6;
 }
 
 .action-buttons .liked {
@@ -519,12 +417,6 @@ button:hover {
 
 .like-counter {
     font-size: 0.4em;
-}
-
-/* Dark Theme Styles */
-body {
-    background-color: #121212;
-    color: #ffffff;
 }
 
 .modal-content {
@@ -977,7 +869,7 @@ body {
 
 .image-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-columns: auto auto auto;
     gap: 0;
 }
 
@@ -1010,9 +902,8 @@ body {
 
 @media (max-width: 767px) {
     body .page-content {
-        padding: 30px;
+        padding: 30px 15px;
     }
-
     .main-banner {
         text-align: center;
     }
@@ -1021,51 +912,10 @@ body {
         font-size: 35px;
     }
 
-    .gaming-library .item ul li,
-    .gaming-library .item ul li:first-child,
-    .gaming-library .item ul li:last-child {
-        width: 100% !important;
-        text-align: center !important;
+    .image-grid {
+        grid-template-columns: auto;
     }
 
-    .gaming-library .item ul li {
-        margin-top: 30px;
-    }
-
-    .top-downloaded ul li .download i {
-        top: 20px;
-        width: 30px;
-        height: 30px;
-        line-height: 30px;
-    }
-
-    .top-downloaded ul li img {
-        margin-right: 10px;
-    }
-
-    .top-downloaded ul li span {
-        font-size: 14px;
-    }
-
-    .top-streamers ul li .main-button {
-        float: none;
-        margin-top: 10px;
-    }
-
-    .top-streamers ul li .main-button a {
-        width: 100%;
-        text-align: center;
-    }
-
-    .top-streamers,
-    .top-downloaded {
-        max-height: 100%;
-        min-height: 100%;
-    }
-
-    .most-popular .item .inner-item {
-        margin-bottom: 20px;
-    }
 }
 
 @media (max-width: 992px) {
@@ -1081,28 +931,12 @@ body {
         font-size: 20px;
     }
 
-    .gaming-library .item ul li {
-        width: 48% !important;
-    }
-
-    .gaming-library .item ul li:last-child {
-        text-align: left;
-    }
-
-    .featured-games {
-        margin-bottom: 60px;
-    }
-
-    .start-stream .item {
-        margin: 15px 0px;
-    }
-
-    .feature-banner .thumb {
-        margin-top: 30px;
-    }
-
     .main-profile .main-info {
-        margin: 45px 0px;
+        margin: 45px 0;
+    }
+
+    .image-grid {
+        grid-template-columns: auto auto;
     }
 }
 

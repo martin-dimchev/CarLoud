@@ -20,6 +20,7 @@
     {% if object_list %}
         {% for object in object_list %}
             {% include 'project-post.html' %}
+            <hr class="my-4">
         {% endfor %}
         <div class="pagination">
         <span class="step-links">
@@ -42,7 +43,7 @@
         </span>
         </div>
     {% else %}
-        <h4>No posts</h4>
+        <h4 class="text-center">No posts</h4>
     {% endif %}
 
 

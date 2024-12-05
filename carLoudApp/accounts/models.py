@@ -2,7 +2,6 @@ from cloudinary.models import CloudinaryField
 from django.contrib.auth.models import  AbstractUser
 from django.core.validators import MinLengthValidator
 from django.db import models
-from django.db.models import FileField
 
 from carLoudApp.accounts.choices import GenderChoices
 from carLoudApp.accounts.validators import CapFirstValidator, IsAlphaValidator
@@ -71,20 +70,3 @@ class Profile(models.Model):
         null=True,
         blank=True,
     )
-
-
-
-class Follower(models.Model):
-    follower = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        related_name='following',
-    )
-    is_following = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        related_name='followers',
-    )
-
-    class Meta:
-        unique_together = ('follower', 'is_following')

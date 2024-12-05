@@ -276,5 +276,46 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
-});
+    const followButtonElement = document.querySelector('#follow-btn')
+    const is_following = followButtonElement.dataset.followId
+
+
+    followButtonElement.addEventListener('click', function () {
+        fetch(`${domain}/api/accounts/account/${is_following}/follow/`, {
+            method: "POST",
+            credentials: "include",
+            referrer: "same-origin",
+            headers: {
+                "X-CSRFToken": getCookie('csrftoken'),
+                "Content-Type": "application/json",
+            }
+        })
+            .then(response => response.json())
+            .then(data => {
+                const followersCountPElement = document.querySelector('#followers-count')
+                let count = Number(followersCountPElement.textContent)
+                const strongElement = document.createElement('strong')
+
+                if (data.is_followed === true) {
+                    followButtonElement.textContent = 'Follow'
+                    count++
+                    followersCountPElement.textContent = ''
+                    strongElement.textContent = count
+                    followersCountPElement.appendChild(strongElement)
+
+                } else {
+                    followButtonElement.textContent = 'Unfollow'
+                    count--
+                    followersCountPElement.textContent = ''
+                    strongElement.textContent = count
+                    followersCountPElement.appendChild(strongElement)
+                }
+            })
+            .catch(errors => console.log(errors))
+
+
+    })
+
+})
+
 
