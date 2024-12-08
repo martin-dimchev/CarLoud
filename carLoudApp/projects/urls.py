@@ -5,7 +5,7 @@ urlpatterns = [
     path('create/', views.ProjectCreateView.as_view(), name='project-create'),
     path('garage/<int:pk>', views.GarageListView.as_view(), name='user-garage'),
     path('project/<int:pk>/', views.ProjectDetailView.as_view(), name='project-details'),
-    path('project/<int:pk>/edit/', views.ProjectUpdateView.as_view(), name='project-edit'),
+    path('project/<int:pk>/edit/', views.ProjectEditView.as_view(), name='project-edit'),
     path('project/<int:pk>/delete/', views.project_delete, name='project-delete'),
 
     path('project/<int:pk>/posts/create/', views.ProjectPostCreateView.as_view(), name='project-image-add'),

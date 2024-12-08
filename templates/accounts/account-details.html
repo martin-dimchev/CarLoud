@@ -5,88 +5,100 @@
 {% block content %}
     <div class="container my-5">
         <div class="row">
-            <div class="col-lg-12">
-                <div class="card shadow-sm profile-details">
-                    <div class="row g-0">
-                        <div class="col-md-4 text-center p-3">
-                            {% if object.profile.image %}
-                                {% cloudinary object.profile.image class="img-fluid rounded-circle" %}
-                            {% else %}
-                                <img
-                                        src="{% static 'assets/images/anonymous-user.jpg' %}"
-                                        alt="profile-image"
-                                        class="img-fluid rounded-circle"
-                                >
+            <p class="col-lg-12">
+            <div class="card shadow-sm profile-details">
+                <div class="row g-0">
+                    <div class="col-md-4 text-center p-3">
+                        {% if object.profile.image %}
+                            {% cloudinary object.profile.image class="img-fluid rounded-circle" %}
+                        {% else %}
+                            <img
+                                    src="{% static 'assets/images/anonymous-user.jpg' %}"
+                                    alt="profile-image"
+                                    class="img-fluid rounded-circle"
+                            >
+                        {% endif %}
+                        {% if object.full_name %}
+                            <p class="mt-2">{{ object.full_name }}</p>
+                        {% endif %}
+                        {% if object.profile.age %}
+                            <p>Age: {{ object.profile.age }}</p>
+                        {% endif %}
+
+                    </div>
+                    <div class="col-md-4 align-self-center text-center">
+                        <div class="p-3">
+                            <h4>{{ object.username }}</h4>
+                            {% if object.profile.bio %}
+                                <p>{{ object.profile.bio }}</p>
+                            {% endif %}
+                            {% if request.user != object %}
+
+                                <button class="btn btn-primary mt-4" id="follow-btn"
+                                        data-follow-id="{{ object.pk }}">
+                                    {% if request.user.pk in followers_pks %}
+                                        Unfollow
+                                    {% else %}
+                                        Follow
+                                    {% endif %}
+                                </button>
+                            {% endif %}
+                            {% if request.user == object %}
+                                <form method="post" action="{% url 'user-logout' object.pk %}">
+                                    {% csrf_token %}
+                                    <button class="btn btn-danger mt-4">Logout</button>
+                                </form>
                             {% endif %}
                         </div>
-                        <div class="col-md-4 align-self-center text-center">
-                            <div class="p-3">
-                                <h4>{{ object.username }}</h4>
-                                {% if object.profile.bio %}
-                                    <p>{{ object.profile.bio }}</p>
-                                {% endif %}
-                                {% if request.user != object %}
-
-                                    <button class="btn btn-primary mt-4" id="follow-btn" data-follow-id="{{ object.pk }}">
-                                        {% if request.user.pk in followers_pks %}
-                                            Unfollow
-                                        {% else %}
-                                            Follow
-                                        {% endif %}
-                                    </button>
-                                {% endif %}
-                                {% if request.user == object %}
-                                    <form method="post" action="{% url 'user-logout' object.pk %}">
-                                        {% csrf_token %}
-                                        <button class="btn btn-danger mt-4">Logout</button>
-                                    </form>
-                                {% endif %}
-                            </div>
-                        </div>
-                        <div class="col-md-4 align-self-center">
-                            <h5 class="text-center mb-2"><a href="{% url 'user-garage' object.pk%}">Garage</a></h5>
-                            <div class="p-3">
-                                <ul class="list-group list-group-flush profile-info">
-                                    <li class="list-group-item profile-info-item">
-                                        <p>Project Cars: </p>
-                                        <p><strong>{{ projects.count }}</strong></p>
-                                    </li>
-                                    <li class="list-group-item profile-info-item">
-                                        <p>Posts: </p>
-                                        <p><strong>{{ posts.count }}</strong></p>
-                                    </li>
-                                    <li class="list-group-item profile-info-item">
-                                        <p>Followers: </p>
-                                        <p id="followers-count"><strong>{{ object.followers.count }}</strong></p>
-                                    </li>
-                                    <li class="list-group-item profile-info-item">
-                                        <p>Following: </p>
-                                        <p><strong>{{ object.following.count }}</strong></p>
-                                    </li>
-                                </ul>
-                            </div>
+                    </div>
+                    <div class="col-md-4 align-self-center">
+                        <h5 class="text-center mb-2"><a href="{% url 'user-garage' object.pk %}">Garage</a></h5>
+                        <div class="p-3">
+                            <ul class="list-group list-group-flush profile-info">
+                                <li class="list-group-item profile-info-item">
+                                    <p>Project Cars: </p>
+                                    <p><strong>{{ projects.count }}</strong></p>
+                                </li>
+                                <li class="list-group-item profile-info-item">
+                                    <p>Posts: </p>
+                                    <p><strong>{{ posts.count }}</strong></p>
+                                </li>
+                                <li class="list-group-item profile-info-item">
+                                    <p>Followers: </p>
+                                    <p id="followers-count"><strong>{{ object.followers.count }}</strong></p>
+                                </li>
+                                <li class="list-group-item profile-info-item">
+                                    <p>Following: </p>
+                                    <p><strong>{{ object.following.count }}</strong></p>
+                                </li>
+                            </ul>
                         </div>
                     </div>
                 </div>
+        {% if request.user == object %}
+                <p class="text-end me-4"><a href="{% url 'user-edit' object.pk %}">Edit profile</a></p>
+            {% endif %}
+            </div>
+            
 
-                <div class="mt-4 text-center">
-                    {% if posts %}
-                        <h5 class="mb-2">Posts</h5>
-                    {% else %}
-                        <h5 class="mb-2">No posts</h5>
-                    {% endif %}
-                    <hr class="my-4">
-                    <div class="image-grid">
-                        {% for post in posts %}
-                            <a href="{% url 'project-post-details' post.project.pk post.pk %}"
-                               class="image-container">
-                                {% cloudinary post.image class="img-fluid" %}
-                            </a>
-                        {% endfor %}
-                    </div>
+            <div class="mt-4 text-center">
+                {% if posts %}
+                    <h5 class="mb-2">Posts</h5>
+                {% else %}
+                    <h5 class="mb-2">No posts</h5>
+                {% endif %}
+                <hr class="my-4">
+                <div class="image-grid">
+                    {% for post in posts %}
+                        <a href="{% url 'project-post-details' post.project.pk post.pk %}"
+                           class="image-container">
+                            {% cloudinary post.image class="img-fluid" %}
+                        </a>
+                    {% endfor %}
                 </div>
             </div>
         </div>
+    </div>
     </div>
 {% endblock %}
 

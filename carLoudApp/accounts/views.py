@@ -1,28 +1,25 @@
-from time import sleep
-
+import os
 from django.contrib.auth import get_user_model, authenticate, login
 from django.contrib.auth.mixins import LoginRequiredMixin
-
-
 from django.contrib.sites.shortcuts import get_current_site
+from django.core.files.storage import default_storage
+from django.http import HttpResponseForbidden
 from django.shortcuts import redirect, render
 from django.template.loader import render_to_string
 from django.urls import reverse_lazy
 from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from django.views.generic import DetailView, CreateView
+from django.views.generic import DetailView, CreateView, UpdateView
 
-from carLoudApp.accounts.forms import UserRegisterForm, UserLoginForm, ResendEmailForm
+from carLoudApp import settings
+from carLoudApp.accounts.forms import UserRegisterForm, UserLoginForm, ResendEmailForm, UserProfileEditForm
 from carLoudApp.accounts.utils import generate_token
 from carLoudApp.projects.models import Project, ProjectPosts
-from django.conf import settings
+from carLoudApp.accounts.tasks import send_email_task, upload_to_cloudinary
+
 
 UserModel = get_user_model()
 
-from .tasks import send_email_task
-from django.template.loader import render_to_string
-from django.utils.http import urlsafe_base64_encode
-from django.utils.encoding import force_bytes
 
 def send_email(request, user):
     current_site = get_current_site(request)
@@ -32,6 +29,7 @@ def send_email(request, user):
         'activation_url': f"http://{current_site.domain}/accounts/account/{urlsafe_base64_encode(force_bytes(user.pk))}/{generate_token.make_token(user)}/"
     })
     send_email_task.delay(email_subject, email_body, user.email)
+
 
 def activate_user(request, uidb64, token):
     try:
@@ -156,3 +154,44 @@ class UserDetailsView(LoginRequiredMixin, DetailView):
             context['posts'] = ProjectPosts.objects.filter(project__user=user, project__private=False)
 
         return context
+
+
+
+class UserEditView(LoginRequiredMixin, UpdateView):
+    model = UserModel
+    form_class = UserProfileEditForm
+    template_name = 'accounts/account-edit.html'
+
+    def get(self, request, *args, **kwargs):
+        user = self.get_object()
+        if self.request.user != user :
+            return HttpResponseForbidden('You do not have permission to edit this account.')
+        return super().get(request, *args, **kwargs)
+
+    def get_success_url(self):
+        return reverse_lazy('user-details', kwargs={'pk': self.get_object().pk})
+
+    def form_valid(self, form):
+        form_user = form.save(commit=False)
+        user = self.get_object()
+
+        if self.request.user != user:
+            return HttpResponseForbidden('You do not have permission to edit this account.')
+
+        if self.request.FILES:
+            uploaded_file = self.request.FILES['profile_image']
+            temp_dir = settings.TEMP_FILES
+            os.makedirs(temp_dir, exist_ok=True)
+            temp_file_path = str(temp_dir / uploaded_file.name)
+
+            with default_storage.open(temp_file_path, 'wb+') as temp_file:
+                for chunk in uploaded_file.chunks():
+                    temp_file.write(chunk)
+
+            upload_to_cloudinary.delay(temp_file_path, form_user.profile.pk)
+            form_user.profile.image = None
+
+        form_user.save()
+
+        return super().form_valid(form)
+

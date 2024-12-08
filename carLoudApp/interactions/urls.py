@@ -9,6 +9,4 @@ urlpatterns = [
     path('comments/comment/<int:pk>/edit/', views.CommentEditView.as_view(), name='comment-edit-api'),
     path('comments/add/', views.CommentCreateView.as_view(), name='comment-create-api'),
 
-    path('posts/post/<int:image_pk>/comments/', views.CommentsListView.as_view(), name='comment-section'),
-
 ]

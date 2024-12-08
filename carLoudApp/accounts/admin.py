@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth import get_user_model
 
-from carLoudApp.accounts.forms import UserChangeForm
+from carLoudApp.accounts.forms import UserProfileEditForm
 from carLoudApp.accounts.models import Profile
 
 UserModel = get_user_model()
@@ -14,5 +14,5 @@ class ProfileInline(admin.StackedInline):
 
 @admin.register(UserModel)
 class UserAdmin(admin.ModelAdmin):
-    change_form = UserChangeForm
+    change_form = UserProfileEditForm
     inlines = [ProfileInline, ]

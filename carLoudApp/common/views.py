@@ -1,5 +1,5 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db.models import Case, When, Q, Count
+from django.db.models import Q, Case, When, Count
 from django.urls import reverse_lazy
 from django.views.generic import ListView
 
@@ -13,12 +13,6 @@ class IndexView(ListView):
     def get_queryset(self):
         images = ProjectPosts.objects.filter(project__private=False).annotate(like_count=Count('likes')).order_by('-like_count')[:8]
         return images
-
-from django.core.paginator import Paginator
-from django.db.models import Q, Case, When
-from django.urls import reverse_lazy
-from django.views.generic import ListView
-from django.contrib.auth.mixins import LoginRequiredMixin
 
 class DashboardView(LoginRequiredMixin, ListView):
     template_name = 'common/dashboard.html'

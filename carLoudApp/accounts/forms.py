@@ -1,6 +1,9 @@
 from django import forms
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import BaseUserCreationForm
+from django.core.validators import MinValueValidator
+
+
 UserModel = get_user_model()
 
 
@@ -41,6 +44,33 @@ class UserRegisterForm(BaseUserCreationForm):
         fields = ['email','username', 'password1', 'password2']
 
 
+class UserProfileEditForm(forms.ModelForm):
+    profile_image = forms.FileField(required=False)
+    age = forms.IntegerField(required=False, validators=[MinValueValidator(1, 'Your age cannot be negative or zero value.'),])
+    bio = forms.CharField(widget=forms.Textarea, required=False,)
+
+    def __init__(self, *args, **kwargs):
+        user = kwargs.get('instance')
+        super().__init__(*args, **kwargs)
+        if user:
+            self.fields['bio'].initial = user.profile.bio
+            self.fields['age'].initial = user.profile.age
+
+        for field in self.fields.values():
+            field.widget.attrs['class'] = 'form-control auth-input'
+
+    class Meta:
+        model = UserModel
+        fields = ['username', 'first_name', 'last_name', 'age', 'profile_image', 'bio']
+
+    def save(self, commit=True):
+        user = super().save(commit)
+        user.profile.bio = self.cleaned_data['bio']
+        user.profile.age = self.cleaned_data['age']
+        user.profile.save()
+        return user
+
+
 class UserLoginForm(forms.Form):
     email = forms.CharField(
         label="Email",
@@ -58,13 +88,6 @@ class UserLoginForm(forms.Form):
     class Meta:
         model = UserModel
         fields = ['email', 'password']
-
-
-
-class UserChangeForm(forms.ModelForm):
-    class Meta:
-        model = UserModel
-        exclude = ['profile_image']
 
 
 class ResendEmailForm(forms.Form):

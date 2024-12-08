@@ -28,7 +28,7 @@
             <div class="row">
                 {% for object in object_list %}
                     <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
-                        <a href="{% url 'dashboard' %}#image-{{ object.pk }}" class="text-decoration-none">
+                        <a href="{% url 'project-post-details' object.project.pk object.pk%}" class="text-decoration-none">
                             <div class="p-3 most-popular-item">
                                 <div class="image-container mb-2">
                                     {% cloudinary object.image class="img-fluid rounded-3" %}
@@ -46,4 +46,3 @@
         </div>
     </div>
 {% endblock %}
-s

@@ -3,52 +3,52 @@
 {% block content %}
     <div class="auth-container">
         <div class="row justify-content-center">
-            <div class="col-md-6">
-                <div class="auth-card text-center">
-                    <div class="auth-header">
-                        <h4>Login</h4>
-                    </div>
-                    <div class="auth-body">
-                        <form method="post" action="{% url 'user-login' %}">
-                            {% csrf_token %}
-                            
-                            {% if message %}
-                                <div class="alert alert-{% alert_class message %}" role="alert">
-                                    {{ message }}
-                                </div>
-                            {% endif %}
 
-                            <div class="mb-3">
-                                {{ form.email.label_tag }}
-                                {{ form.email }}
-                            </div>
-                            <div class="mb-3">
-                                {{ form.password.label_tag }}
-                                {{ form.password }}
-                            </div>
-                            <div class="d-grid">
-                                <button type="submit" class="btn auth-button">Login</button>
-                            </div>
-                        </form>
-                    </div>
-                    {% if message == 'Your email is not verified.' %}
-                        <div class="auth-footer">
-                            <p>
-                                Didn't receive verification email? <a href="{% url 'user-resend-email' %}"
-                                                                      class="auth-link">Resend email</a>
-                            </p>
-                        </div>
-                    {% else %}
-                        <div class="auth-footer">
-                            <p>
-                                Don't have an account? <a href="{% url 'user-register' %}"
-                                                          class="auth-link">Register</a>
-                            </p>
-                        </div>
-                    {% endif %}
+            <div class="auth-card text-center">
+                <div class="auth-header">
+                    <h4>Login</h4>
                 </div>
+                <div class="auth-body">
+                    <form method="post" action="{% url 'user-login' %}">
+                        {% csrf_token %}
+
+                        {% if message %}
+                            <div class="alert alert-{% alert_class message %}" role="alert">
+                                {{ message }}
+                            </div>
+                        {% endif %}
+
+                        <div class="mb-3">
+                            {{ form.email.label_tag }}
+                            {{ form.email }}
+                        </div>
+                        <div class="mb-3">
+                            {{ form.password.label_tag }}
+                            {{ form.password }}
+                        </div>
+                        <div class="d-grid">
+                            <button type="submit" class="btn auth-button">Login</button>
+                        </div>
+                    </form>
+                </div>
+                {% if message == 'Your email is not verified.' %}
+                    <div class="auth-footer">
+                        <p>
+                            Didn't receive verification email? <a href="{% url 'user-resend-email' %}"
+                                                                  class="auth-link">Resend email</a>
+                        </p>
+                    </div>
+                {% else %}
+                    <div class="auth-footer">
+                        <p>
+                            Don't have an account? <a href="{% url 'user-register' %}"
+                                                      class="auth-link">Register</a>
+                        </p>
+                    </div>
+                {% endif %}
             </div>
         </div>
+   
     </div>
 
 {% endblock %}

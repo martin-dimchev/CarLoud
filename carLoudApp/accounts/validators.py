@@ -15,6 +15,8 @@ class IsAlphaValidator:
     def message(self, value):
         if not value:
             self.__message = 'This field must contain only characters.'
+        else:
+            self.__message = value
 
     def __call__(self, value):
         if not value.isalpha():

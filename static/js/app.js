@@ -257,7 +257,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const projectId = this.dataset.projectId;
             const imageId = this.dataset.imageId;
 
-            const postLink = `${domain}/projects/project/${projectId}/images/image/${imageId}`;
+            const postLink = `${domain}/projects/project/${projectId}/posts/post/${imageId}`;
 
             navigator.clipboard.writeText(postLink)
                 .then(() => {

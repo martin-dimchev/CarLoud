@@ -2,7 +2,6 @@ import cloudinary.uploader
 from celery import shared_task
 from django.shortcuts import get_object_or_404
 from carLoudApp.projects.models import ProjectPosts
-import cloudinary
 from pathlib import Path
 
 

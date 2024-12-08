@@ -3,7 +3,7 @@ from django.contrib.auth.models import  AbstractUser
 from django.core.validators import MinLengthValidator
 from django.db import models
 
-from carLoudApp.accounts.choices import GenderChoices
+
 from carLoudApp.accounts.validators import CapFirstValidator, IsAlphaValidator
 
 
@@ -40,7 +40,13 @@ class User(AbstractUser):
 
     @property
     def full_name(self):
-        return f'{self.first_name} {self.last_name}'
+        if self.first_name and self.last_name:
+            return f'{self.first_name} {self.last_name}'
+        elif self.first_name:
+            return self.first_name
+        elif self.last_name:
+            return self.last_name
+        return ''
 
 class Profile(models.Model):
     user = models.OneToOneField(
@@ -57,14 +63,7 @@ class Profile(models.Model):
         null=True,
         blank=True,
     )
-    gender = models.CharField(
-        max_length=1,
-        null=True,
-        blank=True,
-        choices=(
-            GenderChoices.choices
-        )
-    )
+
     bio = models.TextField(
         max_length=255,
         null=True,

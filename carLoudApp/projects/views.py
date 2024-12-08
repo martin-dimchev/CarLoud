@@ -1,17 +1,17 @@
 import os
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.core.files.storage import FileSystemStorage, default_storage
-from django.http import HttpResponse, Http404
+from django.core.files.storage import default_storage
+from django.http import Http404, HttpResponseForbidden
 from django.shortcuts import redirect, render, get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, ListView, DetailView, UpdateView
-from rest_framework.status import HTTP_403_FORBIDDEN
+
 
 from carLoudApp import settings
 from carLoudApp.projects.forms import ProjectForm, ProjectImagesForm
 from carLoudApp.projects.models import Project, ProjectPosts
-from carLoudApp.projects.tasks import upload_to_cloudinary, upload_to_cloudinary
+from carLoudApp.projects.tasks import upload_to_cloudinary
 
 UserModel = get_user_model()
 
@@ -63,11 +63,11 @@ class ProjectDetailView(LoginRequiredMixin, DetailView):
         project = self.get_object()
 
         if (self.request.user != project.user) and project.private:
-            return HttpResponse(HTTP_403_FORBIDDEN, 'You are not allowed to view this project')
+            return HttpResponseForbidden('You are not allowed to view this project')
         return super().get(request, *args, **kwargs)
 
 
-class ProjectUpdateView(LoginRequiredMixin, UpdateView):
+class ProjectEditView(LoginRequiredMixin, UpdateView):
     model = Project
     form_class = ProjectForm
     template_name = 'projects/project-edit.html'
@@ -75,7 +75,7 @@ class ProjectUpdateView(LoginRequiredMixin, UpdateView):
     def get(self, request, *args, **kwargs):
         project = self.get_object()
         if project.user != request.user:
-            return HttpResponse(HTTP_403_FORBIDDEN, 'You do not have permission to edit this project.')
+            return HttpResponseForbidden('You do not have permission to edit this project.')
         return super().get(request, *args, **kwargs)
 
     def form_valid(self, form):
@@ -83,7 +83,7 @@ class ProjectUpdateView(LoginRequiredMixin, UpdateView):
         user = self.request.user
 
         if user != project.user:
-            return HttpResponse(HTTP_403_FORBIDDEN)
+            return HttpResponseForbidden('You are not allowed to edit this project.')
         project.save()
         return redirect(reverse_lazy('project-details', kwargs={'pk': project.pk}))
 
@@ -98,7 +98,7 @@ def project_delete(request, pk):
     project = get_object_or_404(Project, pk=pk)
 
     if project.user != request.user:
-        return HttpResponse(HTTP_403_FORBIDDEN, 'You do not have permission to delete this project.')
+        return HttpResponseForbidden('You do not have permission to delete this project.')
 
     if request.method == 'POST':
         project.delete()
@@ -122,7 +122,7 @@ class ProjectPostCreateView(LoginRequiredMixin, CreateView):
         project = get_object_or_404(Project, pk=project_pk)
 
         if project.user != user:
-            return HttpResponse(HTTP_403_FORBIDDEN, 'You do not have permission to add post to this project.')
+            return HttpResponseForbidden('You do not have permission to add post to this project.')
 
         temp_dir = settings.TEMP_FILES
         os.makedirs(temp_dir, exist_ok=True)
@@ -162,10 +162,9 @@ class ProjectPostDetailView(LoginRequiredMixin, DetailView):
             raise Http404
 
         if (self.request.user != post.project.user) and post.project.private:
-            return HttpResponse(HTTP_403_FORBIDDEN, 'You do not have permission to view this image')
+            return HttpResponseForbidden('You do not have permission to view this image')
 
         return super().get(request, *args, **kwargs)
-
 
 
 class ProjectPostEditView(LoginRequiredMixin, UpdateView):
@@ -182,7 +181,7 @@ class ProjectPostEditView(LoginRequiredMixin, UpdateView):
             raise Http404
 
         if post.project.user != request.user:
-            return HttpResponse(HTTP_403_FORBIDDEN, 'You do not have permission to edit this post')
+            return HttpResponseForbidden('You do not have permission to edit this post')
 
         return super().get(request, *args, **kwargs)
 
@@ -214,7 +213,7 @@ class ProjectPostEditView(LoginRequiredMixin, UpdateView):
             else:
                 form.save()
             return redirect(reverse_lazy('project-post-details', kwargs={'pk': post.project.pk, 'post_pk': post.pk}))
-        return HttpResponse(HTTP_403_FORBIDDEN)
+        return HttpResponseForbidden('You do not have permission to edit this post')
 
 
 def project_post_delete(request, pk, post_pk):
@@ -224,7 +223,7 @@ def project_post_delete(request, pk, post_pk):
     if post not in project.posts.all():
         raise Http404
     elif project.user != request.user:
-        return HttpResponse(HTTP_403_FORBIDDEN, 'You do not have permission to delete this project.')
+        return HttpResponseForbidden('You do not have permission to delete this project.')
 
     if request.method == 'POST':
         post.delete()
