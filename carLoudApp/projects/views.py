@@ -1,13 +1,17 @@
+import os
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.files.storage import FileSystemStorage, default_storage
 from django.http import HttpResponse, Http404
 from django.shortcuts import redirect, render, get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, ListView, DetailView, UpdateView
 from rest_framework.status import HTTP_403_FORBIDDEN
 
+from carLoudApp import settings
 from carLoudApp.projects.forms import ProjectForm, ProjectImagesForm
 from carLoudApp.projects.models import Project, ProjectPosts
+from carLoudApp.projects.tasks import upload_to_cloudinary, upload_to_cloudinary
 
 UserModel = get_user_model()
 
@@ -117,13 +121,24 @@ class ProjectPostCreateView(LoginRequiredMixin, CreateView):
         user = self.request.user
         project = get_object_or_404(Project, pk=project_pk)
 
-        if project.user == user:
-            image = form.save(commit=False)
-            image.project = project
-            image.user = user
-            image.save()
-            return redirect(reverse_lazy('project-details', kwargs={'pk': project.pk}))
-        return HttpResponse(HTTP_403_FORBIDDEN, 'You do not have permission to add post to this project.')
+        if project.user != user:
+            return HttpResponse(HTTP_403_FORBIDDEN, 'You do not have permission to add post to this project.')
+
+        uploaded_file = self.request.FILES['image']
+        temp_file_path = str(settings.TEMP_FILES / uploaded_file.name)
+
+        with default_storage.open(temp_file_path, 'wb') as temp_file:
+            for chunk in uploaded_file.chunks():
+                temp_file.write(chunk)
+
+        post = form.save(commit=False)
+        post.project = project
+        post.image = None
+        post.save()
+
+        upload_to_cloudinary.delay(temp_file_path, post.pk)
+
+        return redirect(reverse_lazy('project-details', kwargs={'pk': project.pk}))
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -176,11 +191,21 @@ class ProjectPostEditView(LoginRequiredMixin, UpdateView):
         return context
 
     def form_valid(self, form):
-        project_post = get_object_or_404(ProjectPosts, pk=self.kwargs.get('post_pk'))
+        post = get_object_or_404(ProjectPosts, pk=self.kwargs.get('post_pk'))
 
-        if project_post.project.user == self.request.user:
-            image = form.save()
-            return redirect(reverse_lazy('project-post-details', kwargs={'pk': image.project.pk, 'post_pk': image.pk}))
+        if post.project.user == self.request.user:
+            if self.request.FILES:
+                uploaded_file = self.request.FILES['image']
+                temp_file_path = str(settings.TEMP_FILES / uploaded_file.name)
+
+                with default_storage.open(temp_file_path, 'wb') as temp_file:
+                    for chunk in uploaded_file.chunks():
+                        temp_file.write(chunk)
+
+                upload_to_cloudinary(temp_file_path, post.pk)
+            else:
+                form.save()
+            return redirect(reverse_lazy('project-post-details', kwargs={'pk': post.project.pk, 'post_pk': post.pk}))
         return HttpResponse(HTTP_403_FORBIDDEN)
 
 

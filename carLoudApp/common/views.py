@@ -14,6 +14,12 @@ class IndexView(ListView):
         images = ProjectPosts.objects.filter(project__private=False).annotate(like_count=Count('likes')).order_by('-like_count')[:8]
         return images
 
+from django.core.paginator import Paginator
+from django.db.models import Q, Case, When
+from django.urls import reverse_lazy
+from django.views.generic import ListView
+from django.contrib.auth.mixins import LoginRequiredMixin
+
 class DashboardView(LoginRequiredMixin, ListView):
     template_name = 'common/dashboard.html'
     login_url = reverse_lazy('user-login')
@@ -23,7 +29,7 @@ class DashboardView(LoginRequiredMixin, ListView):
         user = self.request.user
         followed_users_pks = user.following.values_list('is_following', flat=True)
 
-        queryset = ProjectPosts.objects.filter(project__private=False)
+        queryset = ProjectPosts.objects.filter(project__private=False, image__icontains='http://')
 
         search_query = self.request.GET.get('search')
         if search_query:
@@ -31,7 +37,6 @@ class DashboardView(LoginRequiredMixin, ListView):
                 Q(project__title__icontains=search_query) |
                 Q(project__user__username__icontains=search_query) |
                 Q(caption__icontains=search_query)
-
             )
 
         queryset = queryset.annotate(
@@ -42,6 +47,8 @@ class DashboardView(LoginRequiredMixin, ListView):
         ).order_by('-is_followed_user', '-created_at')
 
         return queryset
+
+
 
 
 

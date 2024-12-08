@@ -255,7 +255,7 @@ section {
 
 /* Home */
 .main-banner {
-    background-image: url(../images/banner-bg.jpg);
+    background: url(../images/banner-bg.jpg);
     background-position: center center;
     background-size: cover;
     min-height: 380px;
@@ -264,6 +264,7 @@ section {
 }
 
 .main-banner h4 {
+    text-shadow: 2px 2px 0 rgba(203, 0, 0, 0.76);
     font-size: 45px;
     text-transform: uppercase;
     margin-bottom: 25px;
@@ -667,6 +668,28 @@ button:hover {
     box-shadow: none;
 }
 
+.page-item .page-link {
+    background-color: #1a1a1a;
+    color: white;
+}
+
+.page-item .page-link:hover {
+    background-color: #5ce1e6;
+    color: white;
+}
+
+.page-item.active .page-link {
+    background-color: #5ce1e6;
+    color: white;
+}
+
+.page-item.disabled .page-link {
+    background-color: #1a1a1a;
+    color: #696969;
+}
+
+
+
 .copy-feedback {
     font-size: 0.9rem;
     color: #5ce1e6;
@@ -894,7 +917,6 @@ button:hover {
 .image-container:hover img {
     filter: brightness(0.7);
 }
-
 
 body {
     overflow-x: hidden;

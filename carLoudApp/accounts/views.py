@@ -1,3 +1,5 @@
+from time import sleep
+
 from django.contrib.auth import get_user_model, authenticate, login
 from django.contrib.auth.mixins import LoginRequiredMixin
 
@@ -8,21 +10,19 @@ from django.template.loader import render_to_string
 from django.urls import reverse_lazy
 from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from django.views import View
 from django.views.generic import DetailView, CreateView
 
-from django.core.mail import EmailMessage
-from rest_framework.views import APIView
-
-from carLoudApp import settings
 from carLoudApp.accounts.forms import UserRegisterForm, UserLoginForm, ResendEmailForm
-
 from carLoudApp.accounts.utils import generate_token
 from carLoudApp.projects.models import Project, ProjectPosts
 from django.conf import settings
 
 UserModel = get_user_model()
 
+from .tasks import send_email_task
+from django.template.loader import render_to_string
+from django.utils.http import urlsafe_base64_encode
+from django.utils.encoding import force_bytes
 
 def send_email(request, user):
     current_site = get_current_site(request)
@@ -31,17 +31,7 @@ def send_email(request, user):
         'user': user,
         'activation_url': f"http://{current_site.domain}/accounts/account/{urlsafe_base64_encode(force_bytes(user.pk))}/{generate_token.make_token(user)}/"
     })
-
-    email = EmailMessage(
-        subject=email_subject,
-        body=email_body,
-        from_email=settings.EMAIL_FROM_USER,
-        to=[user.email],
-
-    )
-
-    email.send()
-
+    send_email_task.delay(email_subject, email_body, user.email)
 
 def activate_user(request, uidb64, token):
     try:

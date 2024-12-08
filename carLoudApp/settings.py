@@ -116,6 +116,8 @@ STATIC_URL = 'static/'
 
 STATICFILES_DIRS = [BASE_DIR / 'static']
 
+TEMP_FILES = BASE_DIR / 'tmp'
+
 AUTH_USER_MODEL = 'accounts.User'
 
 LOGIN_REDIRECT_URL = reverse_lazy('index')
@@ -128,6 +130,9 @@ cloudinary.config(
     api_secret=config('API_SECRET'),
 )
 
+CELERY_BROKER_URL = config('CELERY_BROKER_URL')
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = config('EMAIL_HOST')
