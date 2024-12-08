@@ -12,4 +12,4 @@ def upload_to_cloudinary(temp_file_path, post_pk):
     response = cloudinary.uploader.upload(temp_file_path)
     post.image = response['url']
     post.save()
-    Path(temp_file_path).unlink()
+    Path(temp_file_path).unlink(missing_ok=True)

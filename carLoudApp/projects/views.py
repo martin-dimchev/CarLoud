@@ -124,6 +124,8 @@ class ProjectPostCreateView(LoginRequiredMixin, CreateView):
         if project.user != user:
             return HttpResponse(HTTP_403_FORBIDDEN, 'You do not have permission to add post to this project.')
 
+        temp_dir = settings.TEMP_FILES
+        os.makedirs(temp_dir, exist_ok=True)
         uploaded_file = self.request.FILES['image']
         temp_file_path = str(settings.TEMP_FILES / uploaded_file.name)
 
@@ -196,13 +198,19 @@ class ProjectPostEditView(LoginRequiredMixin, UpdateView):
         if post.project.user == self.request.user:
             if self.request.FILES:
                 uploaded_file = self.request.FILES['image']
-                temp_file_path = str(settings.TEMP_FILES / uploaded_file.name)
 
-                with default_storage.open(temp_file_path, 'wb') as temp_file:
+                temp_dir = settings.TEMP_FILES
+                os.makedirs(temp_dir, exist_ok=True)
+                temp_file_path = str(temp_dir / uploaded_file.name)
+
+                with default_storage.open(temp_file_path, 'wb+') as temp_file:
                     for chunk in uploaded_file.chunks():
                         temp_file.write(chunk)
 
-                upload_to_cloudinary(temp_file_path, post.pk)
+
+                post.image = None
+                post.save()
+                upload_to_cloudinary.delay(temp_file_path, post.pk)
             else:
                 form.save()
             return redirect(reverse_lazy('project-post-details', kwargs={'pk': post.project.pk, 'post_pk': post.pk}))

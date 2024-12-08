@@ -24,7 +24,11 @@
             </div>
 
             <div class="post-image-container">
-                {% cloudinary object.image class="post-image" %}
+                {% if object.image %}
+                    {% cloudinary object.image class="post-image" %}
+                {% else %}
+                    <h5 class="text-center">Applying changes</h5>
+                {% endif %}
             </div>
 
             <div class="post-footer">
@@ -43,7 +47,8 @@
                             <i class="fa fa-comment-o" aria-hidden="true"></i>
                         </button>
 
-                        <i class="fa fa-share share-icon" data-image-id="{{ object.pk }}" data-project-id="{{ object.project.pk }}" aria-hidden="true"></i>
+                        <i class="fa fa-share share-icon" data-image-id="{{ object.pk }}"
+                           data-project-id="{{ object.project.pk }}" aria-hidden="true"></i>
 
 
                     </div>
