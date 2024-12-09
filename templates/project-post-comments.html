@@ -25,7 +25,7 @@
                                             alt="profile-pic"><strong>{{ comment.user.username }}</strong>
                                     </a>
                                 {% endif %}
-                                {% if request.user.pk == comment.user.pk %}
+                                {% if request.user.pk == comment.user.pk or 'interactions.delete_comment' in request.user.get_all_permissions %}
                                     <button class="btn btn-danger btn-sm delete-btn" data-comment-id="{{ comment.pk }}">
                                         <i class="fa fa-trash" aria-hidden="true"></i>
                                     </button>

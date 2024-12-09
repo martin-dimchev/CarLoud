@@ -10,7 +10,7 @@ from django.views.generic import CreateView, ListView, DetailView, UpdateView
 
 from carLoudApp import settings
 from carLoudApp.projects.forms import ProjectForm, ProjectImagesForm
-from carLoudApp.projects.models import Project, ProjectPosts
+from carLoudApp.projects.models import Project, ProjectPost
 from carLoudApp.projects.tasks import upload_to_cloudinary
 
 UserModel = get_user_model()
@@ -112,7 +112,7 @@ def project_delete(request, pk):
 
 
 class ProjectPostCreateView(LoginRequiredMixin, CreateView):
-    model = ProjectPosts
+    model = ProjectPost
     form_class = ProjectImagesForm
     template_name = 'projects/project-post-create.html'
 
@@ -150,12 +150,12 @@ class ProjectPostCreateView(LoginRequiredMixin, CreateView):
 
 
 class ProjectPostDetailView(LoginRequiredMixin, DetailView):
-    model = ProjectPosts
+    model = ProjectPost
     template_name = 'projects/project-post-details.html'
     pk_url_kwarg = 'post_pk'
 
     def get(self, request, *args, **kwargs):
-        post = get_object_or_404(ProjectPosts, pk=self.kwargs.get('post_pk'))
+        post = get_object_or_404(ProjectPost, pk=self.kwargs.get('post_pk'))
         project = get_object_or_404(Project, pk=self.kwargs.get('pk'))
 
         if post not in project.posts.all():
@@ -168,7 +168,7 @@ class ProjectPostDetailView(LoginRequiredMixin, DetailView):
 
 
 class ProjectPostEditView(LoginRequiredMixin, UpdateView):
-    model = ProjectPosts
+    model = ProjectPost
     form_class = ProjectImagesForm
     template_name = 'projects/project-post-edit.html'
     pk_url_kwarg = 'post_pk'
@@ -192,7 +192,7 @@ class ProjectPostEditView(LoginRequiredMixin, UpdateView):
         return context
 
     def form_valid(self, form):
-        post = get_object_or_404(ProjectPosts, pk=self.kwargs.get('post_pk'))
+        post = get_object_or_404(ProjectPost, pk=self.kwargs.get('post_pk'))
 
         if post.project.user == self.request.user:
             if self.request.FILES:
@@ -217,13 +217,14 @@ class ProjectPostEditView(LoginRequiredMixin, UpdateView):
 
 
 def project_post_delete(request, pk, post_pk):
-    post = get_object_or_404(ProjectPosts, pk=post_pk)
+    post = get_object_or_404(ProjectPost, pk=post_pk)
     project = get_object_or_404(Project, pk=pk)
 
+    user_permissions = request.user.get_all_permissions()
     if post not in project.posts.all():
         raise Http404
-    elif project.user != request.user:
-        return HttpResponseForbidden('You do not have permission to delete this project.')
+    elif project.user != request.user and 'projects.delete_projectposts' not in user_permissions:
+        return HttpResponseForbidden('You do not have permission to delete this post.')
 
     if request.method == 'POST':
         post.delete()

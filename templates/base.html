@@ -48,13 +48,13 @@
                         <a href="{% url 'index' %}"
                            class="{% if request.path == '/' %}active{% endif %} nav-item-links">Home</a>
                     </li>
-
-                    <li class="nav-items">
-                        <a href="{% url 'dashboard' %}"
-                           class="{% is_active '/dashboard/' %} nav-item-links">Dashboard</a>
-                    </li>
-
+                
                     {% if request.user.is_authenticated %}
+                        <li class="nav-items">
+                            <a href="{% url 'dashboard' %}"
+                               class="{% is_active '/dashboard/' %} nav-item-links">Dashboard</a>
+                        </li>
+                        
                         <li class="nav-items">
                             <a href="{% url 'user-garage' request.user.pk %}"
                                class="{% is_active '/projects/garage/' %} nav-item-links">Garage</a>

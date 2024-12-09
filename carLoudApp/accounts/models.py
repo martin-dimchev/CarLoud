@@ -48,6 +48,10 @@ class User(AbstractUser):
             return self.last_name
         return ''
 
+    def __str__(self):
+        return self.username
+
+
 class Profile(models.Model):
     user = models.OneToOneField(
         User,
@@ -69,3 +73,7 @@ class Profile(models.Model):
         null=True,
         blank=True,
     )
+
+    def __str__(self):
+        return self.user.username
+

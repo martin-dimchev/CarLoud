@@ -3,9 +3,17 @@
 {% block content %}
     {% include 'project-post.html' %}
     <div class="text-center">
-    {% if request.user == object.project.user %}
-        <a href="{% url 'project-post-edit' object.project.pk object.pk %}"><button class="btn btn-primary">Edit Post</button></a>
-        <a href="{% url 'project-post-delete' object.project.pk object.pk %}"><button class="btn btn-danger">Delete Post</button></a>
-    {% endif %}
+        {% if request.user == object.project.user %}
+            <a href="{% url 'project-post-edit' object.project.pk object.pk %}">
+                <button class="btn btn-primary">Edit Post</button>
+            </a>
+            <a href="{% url 'project-post-delete' object.project.pk object.pk %}">
+                <button class="btn btn-danger">Delete Post</button>
+            </a>
+        {% elif 'projects.delete_projectposts' in request.user.get_all_permissions %}
+            <a href="{% url 'project-post-delete' object.project.pk object.pk %}">
+                <button class="btn btn-danger">Delete Post</button>
+            </a>
+        {% endif %}
     </div>
 {% endblock %}

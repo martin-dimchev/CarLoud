@@ -1,6 +1,6 @@
 from django import forms
 
-from carLoudApp.projects.models import Project, ProjectPosts
+from carLoudApp.projects.models import Project, ProjectPost
 
 
 from django import forms
@@ -10,12 +10,12 @@ class ProjectForm(forms.ModelForm):
     class Meta:
         model = Project
         fields = [
-            'title', 'make', 'model', 'year', 'description',
+            'title', 'brand', 'model', 'year', 'description',
             'horsepower', 'drivetrain', 'private'
         ]
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control auth-input'}),
-            'make': forms.TextInput(attrs={'class': 'form-control auth-input'}),
+            'brand': forms.TextInput(attrs={'class': 'form-control auth-input'}),
             'model': forms.TextInput(attrs={'class': 'form-control auth-input'}),
             'year': forms.NumberInput(attrs={'class': 'form-control auth-input'}),
             'description': forms.Textarea(attrs={
@@ -33,7 +33,7 @@ class ProjectForm(forms.ModelForm):
 
 class ProjectImagesForm(forms.ModelForm):
     class Meta:
-        model = ProjectPosts
+        model = ProjectPost
         fields = ['image', 'caption']
         widgets = {
             'image': forms.FileInput(attrs={'class': 'form-control auth-input'}),

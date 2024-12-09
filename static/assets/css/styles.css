@@ -263,7 +263,7 @@ section {
 }
 
 .main-banner h4 {
-    text-shadow: 3px 3px 0 rgb(32 42 118);
+    text-shadow: 3px 3px 0 #53191fde;
     font-size: 45px;
     text-transform: uppercase;
     margin-bottom: 25px;
@@ -325,7 +325,6 @@ section {
     margin: 0 auto;
 }
 
-/*Dashboard*/
 
 .search-container {
 
@@ -755,9 +754,13 @@ button:hover {
 }
 
 .profile-image {
-    max-width: 40px;
-    border-radius: 50%;
     margin-right: 2px;
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2px solid #5ce1e6;
 }
 
 .profile-details {
@@ -766,6 +769,17 @@ button:hover {
     padding: 10px 10px;
     gap: 10px;
 }
+
+.img-fluid.rounded-circle {
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid #5ce1e6;
+}
+
+
 
 .post-image-container {
     border-radius: 15px;
@@ -803,6 +817,10 @@ button:hover {
 .project-details-list {
     background-color: #1a1a1a;
     border-radius: 15px;
+}
+
+.project-details-list .list-group-item strong{
+    color: #5ce1e6;
 }
 
 .project-status {

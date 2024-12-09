@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model
 from django.db import models
 
 from carLoudApp.accounts.models import Profile
-from carLoudApp.projects.models import ProjectPosts
+from carLoudApp.projects.models import ProjectPost
 
 UserModel = get_user_model()
 
@@ -13,7 +13,7 @@ class Like(models.Model):
         related_name='likes',
     )
     image = models.ForeignKey(
-        ProjectPosts,
+        ProjectPost,
         on_delete=models.CASCADE,
         related_name='likes',
     )
@@ -29,7 +29,7 @@ class Comment(models.Model):
         related_name='comments',
     )
     image = models.ForeignKey(
-        ProjectPosts,
+        ProjectPost,
         on_delete=models.CASCADE,
         related_name='comments',
     )
@@ -37,6 +37,10 @@ class Comment(models.Model):
     created_at = models.DateTimeField(
         auto_now_add=True,
     )
+
+    def __str__(self):
+        return f'{self.image} comment'
+
 
 class Follower(models.Model):
     follower = models.ForeignKey(

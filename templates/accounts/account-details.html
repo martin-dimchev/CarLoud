@@ -8,7 +8,7 @@
             <p class="col-lg-12">
             <div class="card shadow-sm profile-details">
                 <div class="row g-0">
-                    <div class="col-md-4 text-center p-3">
+                    <div class="col-md-4 text-center p-3 my-auto">
                         {% if object.profile.image %}
                             {% cloudinary object.profile.image class="img-fluid rounded-circle" %}
                         {% else %}
@@ -30,7 +30,7 @@
                         <div class="p-3">
                             <h4>{{ object.username }}</h4>
                             {% if object.profile.bio %}
-                                <p>{{ object.profile.bio }}</p>
+                                <p class="mt-4">{{ object.profile.bio }}</p>
                             {% endif %}
                             {% if request.user != object %}
 
@@ -52,7 +52,7 @@
                         </div>
                     </div>
                     <div class="col-md-4 align-self-center">
-                        <h5 class="text-center mb-2"><a href="{% url 'user-garage' object.pk %}">Garage</a></h5>
+                        <h5 class="text-center mt-2"><a href="{% url 'user-garage' object.pk %}">Garage</a></h5>
                         <div class="p-3">
                             <ul class="list-group list-group-flush profile-info">
                                 <li class="list-group-item profile-info-item">

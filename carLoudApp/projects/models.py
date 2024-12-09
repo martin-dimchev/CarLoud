@@ -1,6 +1,5 @@
 from cloudinary.models import CloudinaryField
 from django.contrib.auth import get_user_model
-from django.core.validators import MinValueValidator
 from django.db import models
 
 from carLoudApp.projects.choices import DrivetrainChoices
@@ -16,7 +15,7 @@ class Project(models.Model):
     title = models.CharField(
         max_length=30,
     )
-    make = models.CharField(
+    brand = models.CharField(
         max_length=40,
     )
     model = models.CharField(
@@ -43,10 +42,13 @@ class Project(models.Model):
     )
 
     @property
-    def make_and_model(self):
-        return f'{self.make} {self.model}'
+    def brand_and_model(self):
+        return f'{self.brand} {self.model}'
 
-class ProjectPosts(models.Model):
+    def __str__(self):
+        return self.title
+
+class ProjectPost(models.Model):
     project = models.ForeignKey(
         Project,
         on_delete=models.CASCADE,
@@ -61,5 +63,6 @@ class ProjectPosts(models.Model):
         auto_now_add=True,
     )
 
-
+    def __str__(self):
+        return f'{self.project} {self.caption}'
 

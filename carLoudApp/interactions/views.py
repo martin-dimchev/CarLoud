@@ -8,7 +8,7 @@ from rest_framework.views import APIView
 from carLoudApp.accounts.views import UserModel
 from carLoudApp.interactions.models import Like, Comment, Follower
 from carLoudApp.interactions.serializers import CommentSerializer
-from carLoudApp.projects.models import ProjectPosts
+from carLoudApp.projects.models import ProjectPost
 
 
 
@@ -19,8 +19,8 @@ class LikeToggleAPIView(APIView):
     def post(self, request, image_pk, *args, **kwargs):
 
         try:
-            image = ProjectPosts.objects.get(pk=image_pk)
-        except ProjectPosts.DoesNotExist:
+            image = ProjectPost.objects.get(pk=image_pk)
+        except ProjectPost.DoesNotExist:
             image = None
 
         if image:
@@ -109,8 +109,8 @@ class CommentDeleteView(DestroyAPIView):
 
     def delete(self, request, *args, **kwargs):
         comment = self.get_object()
-
-        if comment.user != request.user:
+        user_permissions = request.user.get_all_permissions()
+        if comment.user != request.user and 'interactions.delete_comment' not in user_permissions:
             return Response(
                 {'success': False, 'error': 'Forbidden: You are not the owner of this comment.'},
                 status=status.HTTP_403_FORBIDDEN

@@ -23,6 +23,7 @@
                     <div class="heading-section">
                         <h4><em>Most Popular</em> Right Now</h4>
                     </div>
+                    <hr class="my-4">
                 </div>
             </div>
             <div class="row">
@@ -34,13 +35,15 @@
                                     {% cloudinary object.image class="img-fluid rounded-3" %}
                                 </div>
                                 <h5 class="mb-1">{{ object.project.name }}</h5>
-                                <p class="text-muted mb-2">{{ object.project.make_and_model }}</p>
+                                <p class="text-muted mb-2">{{ object.project.brand_and_model }}</p>
                                 <div>
                                     Likes: {{ object.likes.count }}
                                 </div>
                             </div>
                         </a>
                     </div>
+                    {% empty %}
+                    <h4 class="text-center">No posts</h4>
                 {% endfor %}
             </div>
         </div>

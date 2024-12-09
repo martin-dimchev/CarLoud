@@ -14,7 +14,7 @@ from django.views.generic import DetailView, CreateView, UpdateView
 from carLoudApp import settings
 from carLoudApp.accounts.forms import UserRegisterForm, UserLoginForm, ResendEmailForm, UserProfileEditForm
 from carLoudApp.accounts.utils import generate_token
-from carLoudApp.projects.models import Project, ProjectPosts
+from carLoudApp.projects.models import Project, ProjectPost
 from carLoudApp.accounts.tasks import send_email_task, upload_to_cloudinary
 
 
@@ -43,7 +43,7 @@ def activate_user(request, uidb64, token):
     if user is not None:
         if user.is_verified:
             context = {
-                'message': 'Already verified. Please login.',
+                'message': 'Your email is already verified. Please login.',
                 'form': UserLoginForm(),
             }
             return render(request, 'accounts/account-login.html', context)
@@ -143,15 +143,15 @@ class UserDetailsView(LoginRequiredMixin, DetailView):
         followers_pks = user.followers.values_list('follower', flat=True)
         context['followers_pks'] = followers_pks
 
-        images_count = ProjectPosts.objects.filter(project__user=user).count()
+        images_count = ProjectPost.objects.filter(project__user=user).count()
         context['posts_count'] = images_count
 
         if self.request.user == user:
             context['projects'] = Project.objects.filter(user=user)
-            context['posts'] = ProjectPosts.objects.filter(project__user=user)
+            context['posts'] = ProjectPost.objects.filter(project__user=user)
         else:
             context['projects'] = Project.objects.filter(user=user, private=False)
-            context['posts'] = ProjectPosts.objects.filter(project__user=user, project__private=False)
+            context['posts'] = ProjectPost.objects.filter(project__user=user, project__private=False)
 
         return context
 

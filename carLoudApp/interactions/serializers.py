@@ -1,10 +1,10 @@
 from rest_framework import serializers
-from .models import Comment, ProjectPosts
+from .models import Comment, ProjectPost
 from carLoudApp.accounts.serializers import UserSerializer
 
 class CommentSerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True)
-    image = serializers.PrimaryKeyRelatedField(queryset=ProjectPosts.objects.all())
+    image = serializers.PrimaryKeyRelatedField(queryset=ProjectPost.objects.all())
     created_at = serializers.DateTimeField(format="%H:%M", read_only=True)
 
     class Meta:
