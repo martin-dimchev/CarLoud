@@ -4,7 +4,9 @@ from django.core.exceptions import ValidationError
 
 from carLoudApp.projects.models import Project, ProjectPost
 
+
 class ProjectForm(forms.ModelForm):
+
     class Meta:
         model = Project
         fields = [
@@ -30,6 +32,7 @@ class ProjectForm(forms.ModelForm):
 
 
 class ProjectPostsForm(forms.ModelForm):
+
     class Meta:
         model = ProjectPost
         fields = ['image', 'caption']

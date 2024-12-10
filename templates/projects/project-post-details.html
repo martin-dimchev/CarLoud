@@ -1,8 +1,11 @@
 {% extends 'base/base.html' %}
 
 {% block content %}
+    
     {% include 'base/project-post.html' %}
+    
     <div class="text-center">
+    
         {% if request.user == object.project.user %}
             <a href="{% url 'project-post-edit' object.project.pk object.pk %}">
                 <button class="btn btn-primary">Edit Post</button>
@@ -15,5 +18,7 @@
                 <button class="btn btn-danger">Delete Post</button>
             </a>
         {% endif %}
+    
     </div>
+    
 {% endblock %}

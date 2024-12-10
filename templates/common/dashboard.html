@@ -2,6 +2,7 @@
 {% load static %}
 
 {% block content %}
+    
     <div class="search-input">
         <form id="search" action="{% url 'dashboard' %}">
             <div class="search-container input-group">
@@ -17,11 +18,14 @@
         </form>
     </div>
     <hr class="my-4">
+    
     {% if object_list %}
+        
         {% for object in object_list %}
             {% include 'base/project-post.html' %}
             <hr class="my-4">
         {% endfor %}
+        
         <div class="pagination d-flex justify-content-center mt-4">
             <nav aria-label="Page navigation">
                 <ul class="pagination">
@@ -51,12 +55,14 @@
                     {% endif %}
 
                     {% for num in page_obj.paginator.page_range %}
+                        
                         {% if num >= page_obj.number|add:'-1' and num <= page_obj.number|add:'1' and num != 1 and num != page_obj.paginator.num_pages %}
                             <li class="page-item {% if num == page_obj.number %}active{% endif %}">
                                 <a class="page-link"
                                    href="?search={{ request.GET.search|urlencode }}&page={{ num }}">{{ num }}</a>
                             </li>
                         {% endif %}
+                        
                     {% endfor %}
 
                     {% if page_obj.number < page_obj.paginator.num_pages|add:'-2' %}
@@ -87,12 +93,12 @@
                             <span class="page-link" aria-hidden="true">&raquo;</span>
                         </li>
                     {% endif %}
+                
                 </ul>
             </nav>
         </div>
     {% else %}
         <h4 class="text-center">No posts</h4>
     {% endif %}
-
-
+    
 {% endblock %}

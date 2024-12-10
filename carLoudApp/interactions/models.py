@@ -4,7 +4,9 @@ from django.db import models
 from carLoudApp.accounts.models import Profile
 from carLoudApp.projects.models import ProjectPost
 
+
 UserModel = get_user_model()
+
 
 class Like(models.Model):
     user = models.ForeignKey(
@@ -12,6 +14,7 @@ class Like(models.Model):
         on_delete=models.CASCADE,
         related_name='likes',
     )
+
     post = models.ForeignKey(
         ProjectPost,
         on_delete=models.CASCADE,
@@ -31,12 +34,15 @@ class Comment(models.Model):
         on_delete=models.CASCADE,
         related_name='comments',
     )
+
     post = models.ForeignKey(
         ProjectPost,
         on_delete=models.CASCADE,
         related_name='comments',
     )
+
     text = models.TextField()
+
     created_at = models.DateTimeField(
         auto_now_add=True,
     )
@@ -51,6 +57,7 @@ class Follower(models.Model):
         on_delete=models.CASCADE,
         related_name='following',
     )
+
     is_following = models.ForeignKey(
         UserModel,
         on_delete=models.CASCADE,

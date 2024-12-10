@@ -1,10 +1,13 @@
 {% extends 'base/project-form.html' %}
+
 {% block heading %}
     <h4>Edit project</h4>
 {% endblock %}
+
 {% block button %}
     <button type="submit" class="btn auth-button">Edit</button>
 {% endblock %}
+
 {% block back_link %}
     <a href="{% url 'project-details' object.pk %}">Back to Project Details</a>
 {% endblock %}

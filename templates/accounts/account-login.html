@@ -1,15 +1,16 @@
 {% extends 'base/base.html' %}
 {% load alert_class %}
+
 {% block content %}
+    
     <div class="auth-container">
         <div class="row justify-content-center mx-1">
-
             <div class="auth-card text-center">
                 <div class="auth-header">
                     <h4>Login</h4>
                 </div>
                 <div class="auth-body">
-                    <form method="post" action="{% url 'user-login' %}">
+                    <form method="post" action="{% url 'user-login' %}?next={{ request.GET.next|default:'/' }}">
                         {% csrf_token %}
 
                         {% if message %}
@@ -22,15 +23,19 @@
                             {{ form.email.label_tag }}
                             {{ form.email }}
                         </div>
+
                         <div class="mb-3">
                             {{ form.password.label_tag }}
                             {{ form.password }}
                         </div>
+
                         <div class="d-grid">
                             <button type="submit" class="btn auth-button">Login</button>
                         </div>
+
                     </form>
                 </div>
+
                 {% if message == 'Your email is not verified.' %}
                     <div class="auth-footer">
                         <p>
@@ -46,9 +51,9 @@
                         </p>
                     </div>
                 {% endif %}
+
             </div>
         </div>
-   
     </div>
 
 {% endblock %}

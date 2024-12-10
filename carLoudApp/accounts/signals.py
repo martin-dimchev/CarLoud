@@ -4,7 +4,10 @@ from django.dispatch import receiver
 
 from carLoudApp.accounts.models import Profile
 
+
 UserModel = get_user_model()
+
+
 @receiver(post_save, sender=UserModel)
 def create_user_profile(sender, instance, created, **kwargs):
     if created:

@@ -3,7 +3,6 @@ from django.contrib.auth.models import  AbstractUser
 from django.core.validators import MinLengthValidator
 from django.db import models
 
-
 from carLoudApp.accounts.validators import CapFirstValidator, IsAlphaValidator
 
 
@@ -11,6 +10,7 @@ class User(AbstractUser):
     email = models.EmailField(
         unique=True,
     )
+
     first_name = models.CharField(
         max_length=30,
         null=True,
@@ -21,6 +21,7 @@ class User(AbstractUser):
             IsAlphaValidator('Your name must contain only letters'),
         ]
     )
+
     last_name = models.CharField(
         max_length=30,
         null=True,
@@ -31,6 +32,7 @@ class User(AbstractUser):
             IsAlphaValidator('Your name must contain only letters'),
         ]
     )
+
     is_verified = models.BooleanField(
         default=False,
     )
@@ -40,12 +42,14 @@ class User(AbstractUser):
 
     @property
     def full_name(self):
+
         if self.first_name and self.last_name:
             return f'{self.first_name} {self.last_name}'
         elif self.first_name:
             return self.first_name
         elif self.last_name:
             return self.last_name
+
         return ''
 
     def __str__(self):
@@ -57,6 +61,7 @@ class Profile(models.Model):
         User,
         on_delete=models.CASCADE,
     )
+
     image = CloudinaryField(
         'profile_image',
         null=True,

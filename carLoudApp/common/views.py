@@ -12,6 +12,7 @@ class IndexView(ListView):
 
     def get_queryset(self):
         images = ProjectPost.objects.filter(project__private=False).annotate(like_count=Count('likes')).order_by('-like_count')[:8]
+
         return images
 
 class DashboardView(LoginRequiredMixin, ListView):
@@ -26,6 +27,7 @@ class DashboardView(LoginRequiredMixin, ListView):
         queryset = ProjectPost.objects.filter(project__private=False, image__icontains='http://')
 
         search_query = self.request.GET.get('search')
+
         if search_query:
             queryset = queryset.filter(
                 Q(project__title__icontains=search_query) |

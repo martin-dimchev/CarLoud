@@ -1,6 +1,8 @@
 from django import template
 
+
 register = template.Library()
+
 
 @register.simple_tag
 def alert_class(message):
@@ -10,6 +12,7 @@ def alert_class(message):
         'Verification email sent.',
         'A new verification email has been sent. Please check your inbox.',
     ]
+
     danger_messages = [
         'Your email is not verified.',
         'Invalid email or password.',

@@ -3,16 +3,19 @@
 {% load static %}
 
 {% block content %}
+    
     <a href="{% url 'user-garage' object.user.pk %}">Back to garage</a>
     <div class="card my-2 project-details">
         <div class="card-body">
             <div class="project-details-header">
                 <h3 class="card-title">{{ object.title }}</h3>
+            
                 {% if object.private %}
                     <div class="alert alert-danger project-status">Private</div>
                 {% else %}
                     <div class="alert alert-success project-status">Public</div>
                 {% endif %}
+            
             </div>
             <ul class="list-group list-group-flush project-details-list">
                 <li class="list-group-item"><strong>Brand:</strong> {{ object.brand }}</li>
@@ -23,14 +26,17 @@
                 <li class="list-group-item"><strong>Drivetrain:</strong> {{ object.drivetrain }}</li>
                 <li class="list-group-item"><strong>Added on:</strong> {{ object.created_at|date:"F j, Y" }}</li>
             </ul>
+        
             {% if request.user == object.user %}
                 <div class="mt-1 edit-project">
                     <p><a href="{% url 'project-edit' object.pk %}">Edit</a></p>
                 </div>
             {% endif %}
+        
         </div>
     </div>
-    {% if request.user == object.user %}
+    
+    {% if request.user == object.user%}
         <div class="text-center mt-4">
             <a href="#" class="project-delete-btn">
                 <a href="{% url 'project-delete' object.pk %}">
@@ -49,7 +55,9 @@
     {% else %}
         <hr class="my-4">
     {% endif %}
+    
     <div class="row row-cols-1 row-cols-md-3 g-4">
+    
         {% for post in object.posts.all %}
             <div class="col">
                 <a href="{% url 'project-post-details' post.project.pk post.pk %}"
@@ -62,6 +70,7 @@
                 </a>
             </div>
         {% endfor %}
+    
     </div>
 
 {% endblock %}

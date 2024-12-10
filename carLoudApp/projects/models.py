@@ -4,7 +4,9 @@ from django.db import models
 
 from carLoudApp.projects.choices import DrivetrainChoices
 
+
 UserModel = get_user_model()
+
 
 class Project(models.Model):
     user = models.ForeignKey(
@@ -12,31 +14,40 @@ class Project(models.Model):
         on_delete=models.CASCADE,
         related_name='projects',
     )
+
     title = models.CharField(
         max_length=30,
     )
+
     brand = models.CharField(
         max_length=40,
     )
+
     model = models.CharField(
         max_length=40,
     )
+
     year = models.PositiveIntegerField()
+
     description = models.TextField(
         null=True,
         blank=True,
     )
+
     horsepower = models.PositiveIntegerField(
         null=True,
         blank=True,
     )
+
     drivetrain = models.CharField(
         max_length=3,
-        choices=DrivetrainChoices.choices
+        choices=DrivetrainChoices.choices,
     )
+
     private = models.BooleanField(
-        default=False
+        default=False,
     )
+
     created_at = models.DateField(
         auto_now_add=True,
     )
@@ -54,11 +65,14 @@ class ProjectPost(models.Model):
         on_delete=models.CASCADE,
         related_name='posts',
     )
+
     image = CloudinaryField('project_image')
+
     caption = models.TextField(
         blank=True,
         null=True,
     )
+
     created_at = models.DateTimeField(
         auto_now_add=True,
     )

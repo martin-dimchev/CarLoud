@@ -7,7 +7,6 @@ from django.shortcuts import redirect, render, get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, ListView, DetailView, UpdateView
 
-
 from carLoudApp import settings
 from carLoudApp.projects.forms import ProjectForm, ProjectPostsForm
 from carLoudApp.projects.models import Project, ProjectPost
@@ -26,6 +25,7 @@ class ProjectCreateView(LoginRequiredMixin, CreateView):
         project = form.save(commit=False)
         project.user = self.request.user
         project.save()
+
         return super().form_valid(form)
 
     def get_success_url(self):
@@ -42,15 +42,18 @@ class GarageListView(LoginRequiredMixin, ListView):
             user = UserModel.objects.get(pk=self.kwargs['pk'])
         except UserModel.DoesNotExist:
             raise Http404
+
         if self.request.user == user:
             projects = Project.objects.filter(user=user)
         else:
             projects = Project.objects.filter(user=user, private=False)
+
         return projects
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
         context['projects_user'] = UserModel.objects.get(pk=self.kwargs['pk'])
+
         return context
 
 
@@ -64,6 +67,7 @@ class ProjectDetailView(LoginRequiredMixin, DetailView):
 
         if (self.request.user != project.user) and project.private:
             return HttpResponseForbidden('You are not allowed to view this project')
+
         return super().get(request, *args, **kwargs)
 
 
@@ -74,8 +78,10 @@ class ProjectEditView(LoginRequiredMixin, UpdateView):
 
     def get(self, request, *args, **kwargs):
         project = self.get_object()
+
         if project.user != request.user:
             return HttpResponseForbidden('You do not have permission to edit this project.')
+
         return super().get(request, *args, **kwargs)
 
     def form_valid(self, form):
@@ -84,13 +90,16 @@ class ProjectEditView(LoginRequiredMixin, UpdateView):
 
         if user != project.user:
             return HttpResponseForbidden('You are not allowed to edit this project.')
+
         project.save()
+
         return redirect(reverse_lazy('project-details', kwargs={'pk': project.pk}))
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         form = self.form_class(instance=self.get_object())
         context['form'] = form
+
         return context
 
 
@@ -102,12 +111,14 @@ def project_delete(request, pk):
 
     if request.method == 'POST':
         project.delete()
+
         return redirect(reverse_lazy('user-garage', kwargs={'pk': request.user.pk}))
 
     context = {
         'object': project,
         'text': 'this project',
     }
+
     return render(request, 'projects/confirm-delete.html', context)
 
 
@@ -146,6 +157,7 @@ class ProjectPostCreateView(LoginRequiredMixin, CreateView):
         context = super().get_context_data(**kwargs)
         project = get_object_or_404(Project, pk=self.kwargs.get('pk'))
         context['object'] = project
+
         return context
 
 
@@ -189,6 +201,7 @@ class ProjectPostEditView(LoginRequiredMixin, UpdateView):
         context = super().get_context_data(**kwargs)
         form = self.form_class(instance=self.get_object())
         context['form'] = form
+
         return context
 
     def form_valid(self, form):
@@ -206,13 +219,15 @@ class ProjectPostEditView(LoginRequiredMixin, UpdateView):
                     for chunk in uploaded_file.chunks():
                         temp_file.write(chunk)
 
-
                 post.image = None
                 post.save()
+
                 upload_to_cloudinary.delay(temp_file_path, post.pk)
             else:
                 form.save()
+
             return redirect(reverse_lazy('project-post-details', kwargs={'pk': post.project.pk, 'post_pk': post.pk}))
+
         return HttpResponseForbidden('You do not have permission to edit this post')
 
 
@@ -221,6 +236,7 @@ def project_post_delete(request, pk, post_pk):
     project = get_object_or_404(Project, pk=pk)
 
     user_permissions = request.user.get_all_permissions()
+
     if post not in project.posts.all():
         raise Http404
     elif project.user != request.user and 'projects.delete_projectposts' not in user_permissions:
@@ -228,6 +244,7 @@ def project_post_delete(request, pk, post_pk):
 
     if request.method == 'POST':
         post.delete()
+
         return redirect(reverse_lazy('project-details', kwargs={'pk': pk}))
 
     context = {

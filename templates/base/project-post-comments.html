@@ -14,9 +14,11 @@
             <div class="modal-body">
 
                 <ul class="list-group" id="comment-list-{{ object.pk }}">
+                
                     {% for comment in object.comments.all|order_by:'created_at' %}
                         <li class="list-group-item" data-comment-id="{{ comment.pk }}">
                             <div class="comment-header">
+                            
                                 {% if comment.user.profile.image %}
                                     <a href="{% url 'user-details' comment.user.pk %}">{% cloudinary comment.user.profile.image class="profile-pic" %}<strong>{{ comment.user.username }}</strong></a>
                                 {% else %}
@@ -25,18 +27,22 @@
                                             alt="profile-pic"><strong>{{ comment.user.username }}</strong>
                                     </a>
                                 {% endif %}
+                            
                                 {% if request.user.pk == comment.user.pk or 'interactions.delete_comment' in request.user.get_all_permissions %}
                                     <button class="btn btn-danger btn-sm delete-btn" data-comment-id="{{ comment.pk }}">
                                         <i class="fa fa-trash" aria-hidden="true"></i>
                                     </button>
                                 {% endif %}
+                            
                             </div>
                             <div class="comment-text">
                                 <p>{{ comment.text }}</p>
+                            
                                 {% if user.id == comment.user.id %}
                                     <button class="btn btn-sm btn-link edit-btn"><i class="fa fa-pencil"
                                                                                     aria-hidden="true"></i></button>
                                 {% endif %}
+                            
                             </div>
                             <div class="comment-created-at">
                                 <p>{% date_format comment.created_at %}</p>
@@ -44,6 +50,7 @@
                             </div>
                         </li>
                     {% endfor %}
+                
                 </ul>
             </div>
 

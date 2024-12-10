@@ -1,6 +1,7 @@
 from django.core.exceptions import ValidationError
 from django.utils.deconstruct import deconstructible
 
+
 @deconstructible
 class IsAlphaValidator:
 
@@ -21,6 +22,7 @@ class IsAlphaValidator:
     def __call__(self, value):
         if not value.isalpha():
             raise ValidationError(message=self.message)
+
 
 @deconstructible
 class CapFirstValidator:

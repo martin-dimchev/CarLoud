@@ -3,16 +3,22 @@
 {% load cloudinary %}
 
 {% block content %}
+    
     <div class="text-center mb-4">
         <h2><a href="{% url 'user-details' projects_user.pk %}"><em>{{ projects_user.username }}'s</em></a> Garage</h2>
         <hr class="my-4">
+
         {% if request.user.pk == projects_user.pk %}
-        <a href="{% url 'project-create' %}"><button class="btn btn-primary">New project</button></a>
+            <a href="{% url 'project-create' %}">
+                <button class="btn btn-primary">New project</button>
+            </a>
         {% endif %}
+
     </div>
     <div class="row">
         <div class="col-lg-12">
             <div class="row row-cols-1 row-cols-md-3 g-4">
+
                 {% for project in object_list %}
                     <div class="col">
                         <a href="{% url 'project-details' project.pk %}" class="text-decoration-none">
@@ -20,7 +26,7 @@
 
                                 {% if project.posts.first.image %}
                                     <div class="image-container">
-                                    {% cloudinary project.posts.first.image class="card-img-top" %}
+                                        {% cloudinary project.posts.first.image class="card-img-top" %}
                                     </div>
                                 {% else %}
                                     <div class="image-container">
@@ -31,6 +37,7 @@
                                         >
                                     </div>
                                 {% endif %}
+
                                 <div class="card-body">
                                     <h5>{{ project.title }}</h5>
 
@@ -38,12 +45,13 @@
                                         {{ project.make }} {{ project.model }}
                                     </p>
                                 </div>
-                                </div>
+                            </div>
                         </a>
                     </div>
                 {% endfor %}
+            
             </div>
         </div>
     </div>
-    
+
 {% endblock %}

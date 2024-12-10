@@ -6,7 +6,6 @@
 
     <div class="container">
         <div class="post">
-
             <div class="post-header d-flex align-items-center">
                 <a href="{% url 'user-details' object.project.user.pk %}">
 
@@ -24,19 +23,19 @@
             </div>
 
             <div class="post-image-container">
+            
                 {% if object.image %}
                     {% cloudinary object.image class="post-image" %}
                 {% else %}
                     <h5 class="text-center">Applying changes</h5>
                 {% endif %}
+            
             </div>
 
             <div class="post-footer">
-
                 <div class="d-flex justify-content-between">
-
                     <div class="action-buttons">
-
+                        
                         <i class="fa fa-hand-o-up {% is_liked request.user object.pk %}" aria-hidden="true"
                            data-image-id="{{ object.pk }}">
                             <span class="like-counter">{{ object.likes.count }}</span>
@@ -49,12 +48,11 @@
 
                         <i class="fa fa-share share-icon" data-image-id="{{ object.pk }}"
                            data-project-id="{{ object.project.pk }}" aria-hidden="true"></i>
-
-
+                        
                     </div>
-
+                    
                     <a href="{% url 'project-details' object.project.pk %}">{{ object.project.title }}</a>
-
+                    
                 </div>
 
                 {% if object.caption %}
@@ -67,6 +65,7 @@
                         <span class="caption-text">{{ object.caption }}</span>
                     </p>
                 {% endif %}
+            
             </div>
         </div>
     </div>

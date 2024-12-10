@@ -1,4 +1,5 @@
 from django.urls import path
+
 from carLoudApp.projects import views
 
 urlpatterns = [

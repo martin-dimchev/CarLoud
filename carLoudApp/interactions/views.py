@@ -11,7 +11,6 @@ from carLoudApp.interactions.serializers import CommentSerializer
 from carLoudApp.projects.models import ProjectPost
 
 
-
 class LikeToggleAPIView(APIView):
     authentication_classes = [SessionAuthentication]
     permission_classes = [IsAuthenticated]
@@ -25,19 +24,27 @@ class LikeToggleAPIView(APIView):
 
         if post:
             post_likes_pks = post.likes.all().values_list('user', flat=True)
+
             if request.user.pk not in post_likes_pks:
                 Like.objects.create(user=request.user, post=post).save()
-                return Response(status=status.HTTP_201_CREATED, data={
-                    "liked": True,
-                    "likes_count": post.likes.count()
-                })
+
+                data = {
+                    'liked': True,
+                    'likes_count': post.likes.count()
+                }
+
+                return Response(status=status.HTTP_201_CREATED, data=data)
             else:
                 Like.objects.filter(user=request.user, post=post).delete()
                 Like.objects.filter(user=request.user, post=post).delete()
-                return Response(status=status.HTTP_200_OK, data={
-                    "liked": False,
-                    "likes_count": post.likes.count()
-                })
+
+                data = {
+                    'liked': False,
+                    'likes_count': post.likes.count()
+                }
+
+                return Response(status=status.HTTP_200_OK, data=data)
+
         return Response(status=status.HTTP_404_NOT_FOUND, data={})
 
 
@@ -52,24 +59,35 @@ class FollowToggleAPIView(APIView):
         try:
             is_following = UserModel.objects.get(pk=is_following_pk)
         except UserModel.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND, data={
-                "error": "No such user"
-            })
+            data = {
+                'error': 'No such user'
+            }
+
+            return Response(status=status.HTTP_404_NOT_FOUND, data=data)
 
         if Follower.objects.filter(follower=follower, is_following=is_following).exists():
             Follower.objects.filter(follower=follower, is_following=is_following).delete()
-            return Response(status=status.HTTP_200_OK, data={
-                "is_followed": False,
-            })
+
+            data = {
+                'is_followed': False,
+            }
+
+            return Response(status=status.HTTP_200_OK, data=data)
         else:
             if is_following != request.user:
                 Follower.objects.create(follower=follower, is_following=is_following).save()
-                return Response(status=status.HTTP_201_CREATED, data={
-                    "is_followed": True,
-                })
-            return Response(status=status.HTTP_403_FORBIDDEN, data={
-                "error": "You cannot follow yourself!"
-            })
+
+                data = {
+                    'is_followed': True,
+                }
+
+                return Response(status=status.HTTP_201_CREATED, data=data)
+
+            data = {
+                'error': 'You cannot follow yourself!'
+            }
+
+            return Response(status=status.HTTP_403_FORBIDDEN, data=data)
 
 
 class CommentCreateView(CreateAPIView):
@@ -90,17 +108,27 @@ class CommentEditView(UpdateAPIView):
 
     def update(self, request, *args, **kwargs):
         comment = self.get_object()
+
         if comment.user != request.user:
-            return Response({"error": "You do not have permission to edit this comment."},
-                            status=status.HTTP_403_FORBIDDEN)
+            data = {
+                'error': 'You do not have permission to edit this comment.',
+            }
+
+            return Response(status=status.HTTP_403_FORBIDDEN, data=data)
 
         partial = kwargs.pop('partial', True)
         serializer = self.get_serializer(comment, data=request.data, partial=partial)
 
         if serializer.is_valid():
             serializer.save()
-            return Response({"message": "Comment updated successfully!", "text": serializer.data['text']},
-                            status=status.HTTP_200_OK)
+
+            data = {
+                'message': 'Comment updated successfully!',
+                'text': serializer.data['text'],
+            }
+
+            return Response(status=status.HTTP_200_OK, data=data)
+
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -111,14 +139,20 @@ class CommentDeleteView(DestroyAPIView):
     def delete(self, request, *args, **kwargs):
         comment = self.get_object()
         user_permissions = request.user.get_all_permissions()
+
         if comment.user != request.user and 'interactions.delete_comment' not in user_permissions:
-            return Response(
-                {'success': False, 'error': 'Forbidden: You are not the owner of this comment.'},
-                status=status.HTTP_403_FORBIDDEN
-            )
+            data = {
+                'success': False,
+                'error': 'Forbidden: You are not the owner of this comment.',
+            }
+
+            return Response(status=status.HTTP_403_FORBIDDEN, data=data)
 
         comment.delete()
-        return Response(
-            {'success': True, 'message': 'Comment deleted successfully.'},
-            status=status.HTTP_204_NO_CONTENT
-        )
+
+        data = {
+            'success': True,
+            'message': 'Comment deleted successfully.',
+        }
+
+        return Response(status=status.HTTP_204_NO_CONTENT, data=data)

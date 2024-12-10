@@ -1,7 +1,9 @@
 {% extends 'base/base.html' %}
 
 {% block content %}
+    
     <h1>Email Verification Failed</h1>
     <p>The verification link is invalid or expired.</p>
     <a href="{% url 'user-resend-email' %}" class="auth-link">Resend Email</a>
+    
 {% endblock %}>

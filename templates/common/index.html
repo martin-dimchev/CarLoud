@@ -3,6 +3,7 @@
 {% load cloudinary %}
 
 {% block content %}
+    
     <div class="main-banner">
         <div class="row">
             <div class="col-lg-7">
@@ -27,9 +28,11 @@
                 </div>
             </div>
             <div class="row">
+
                 {% for object in object_list %}
                     <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
-                        <a href="{% url 'project-post-details' object.project.pk object.pk%}" class="text-decoration-none">
+                        <a href="{% url 'project-post-details' object.project.pk object.pk %}"
+                           class="text-decoration-none">
                             <div class="p-3 most-popular-item">
                                 <div class="image-container mb-2">
                                     {% cloudinary object.image class="img-fluid rounded-3" %}
@@ -42,10 +45,12 @@
                             </div>
                         </a>
                     </div>
-                    {% empty %}
+                {% empty %}
                     <h4 class="text-center">No posts</h4>
                 {% endfor %}
+            
             </div>
         </div>
     </div>
+    
 {% endblock %}
