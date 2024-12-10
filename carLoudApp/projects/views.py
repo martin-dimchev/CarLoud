@@ -9,7 +9,7 @@ from django.views.generic import CreateView, ListView, DetailView, UpdateView
 
 
 from carLoudApp import settings
-from carLoudApp.projects.forms import ProjectForm, ProjectImagesForm
+from carLoudApp.projects.forms import ProjectForm, ProjectPostsForm
 from carLoudApp.projects.models import Project, ProjectPost
 from carLoudApp.projects.tasks import upload_to_cloudinary
 
@@ -113,7 +113,7 @@ def project_delete(request, pk):
 
 class ProjectPostCreateView(LoginRequiredMixin, CreateView):
     model = ProjectPost
-    form_class = ProjectImagesForm
+    form_class = ProjectPostsForm
     template_name = 'projects/project-post-create.html'
 
     def form_valid(self, form):
@@ -169,7 +169,7 @@ class ProjectPostDetailView(LoginRequiredMixin, DetailView):
 
 class ProjectPostEditView(LoginRequiredMixin, UpdateView):
     model = ProjectPost
-    form_class = ProjectImagesForm
+    form_class = ProjectPostsForm
     template_name = 'projects/project-post-edit.html'
     pk_url_kwarg = 'post_pk'
 

@@ -1,10 +1,8 @@
+import os
 from django import forms
+from django.core.exceptions import ValidationError
 
 from carLoudApp.projects.models import Project, ProjectPost
-
-
-from django import forms
-from .models import Project
 
 class ProjectForm(forms.ModelForm):
     class Meta:
@@ -31,7 +29,7 @@ class ProjectForm(forms.ModelForm):
         }
 
 
-class ProjectImagesForm(forms.ModelForm):
+class ProjectPostsForm(forms.ModelForm):
     class Meta:
         model = ProjectPost
         fields = ['image', 'caption']
@@ -42,3 +40,14 @@ class ProjectImagesForm(forms.ModelForm):
         labels = {
             'image': 'Photo',
         }
+
+    def clean_image(self):
+        image = self.cleaned_data.get('image')
+        print(os.path.splitext(image.name)[1].lower())
+
+        if image:
+            ext = os.path.splitext(image.name)[1].lower()
+            if ext not in ['.jpg', '.jpeg', '.png']:
+                raise ValidationError("Only JPG and PNG files are allowed.")
+
+        return image

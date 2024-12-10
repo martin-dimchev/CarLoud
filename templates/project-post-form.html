@@ -13,11 +13,17 @@
                 <div class="mb-3">
                     {{ form.image.label_tag }}
                     {{ form.image }}
+                    <div class="form-text text-danger">
+                        {{ form.image.errors }}
+                    </div>
                 </div>
 
                 <div class="mb-3">
                     {{ form.caption.label_tag }}
                     {{ form.caption }}
+                    <div class="form-text text-danger">
+                        {{ form.caption.errors }}
+                    </div>
                 </div>
 
 
