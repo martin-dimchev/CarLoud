@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'base/base.html' %}
 {% load static %}
 
 {% block content %}
@@ -19,7 +19,7 @@
     <hr class="my-4">
     {% if object_list %}
         {% for object in object_list %}
-            {% include 'project-post.html' %}
+            {% include 'base/project-post.html' %}
             <hr class="my-4">
         {% endfor %}
         <div class="pagination d-flex justify-content-center mt-4">

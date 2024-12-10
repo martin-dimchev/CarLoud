@@ -1,7 +1,7 @@
-{% extends 'base.html' %}
+{% extends 'base/base.html' %}
 
 {% block content %}
-    {% include 'project-post.html' %}
+    {% include 'base/project-post.html' %}
     <div class="text-center">
         {% if request.user == object.project.user %}
             <a href="{% url 'project-post-edit' object.project.pk object.pk %}">
