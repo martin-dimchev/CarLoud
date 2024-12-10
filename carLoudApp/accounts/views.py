@@ -1,34 +1,24 @@
 import os
 from django.contrib.auth import get_user_model, authenticate, login
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.sites.shortcuts import get_current_site
+
 from django.core.files.storage import default_storage
 from django.http import HttpResponseForbidden
 from django.shortcuts import redirect, render
-from django.template.loader import render_to_string
+
 from django.urls import reverse_lazy
-from django.utils.encoding import force_bytes, force_str
-from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.encoding import force_str
+from django.utils.http import urlsafe_base64_decode
 from django.views.generic import DetailView, CreateView, UpdateView
 
 from carLoudApp import settings
 from carLoudApp.accounts.forms import UserRegisterForm, UserLoginForm, ResendEmailForm, UserProfileEditForm
-from carLoudApp.accounts.utils import generate_token
+from carLoudApp.accounts.utils import generate_token, send_email
 from carLoudApp.projects.models import Project, ProjectPost
-from carLoudApp.accounts.tasks import send_email_task, upload_to_cloudinary
+from carLoudApp.accounts.tasks import upload_to_cloudinary
 
 
 UserModel = get_user_model()
-
-
-def send_email(request, user):
-    current_site = get_current_site(request)
-    email_subject = 'Activate your account'
-    email_body = render_to_string('accounts/account-verify.html', {
-        'user': user,
-        'activation_url': f"http://{current_site.domain}/accounts/account/{urlsafe_base64_encode(force_bytes(user.pk))}/{generate_token.make_token(user)}/"
-    })
-    send_email_task.delay(email_subject, email_body, user.email)
 
 
 def activate_user(request, uidb64, token):
