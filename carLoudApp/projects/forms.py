@@ -32,25 +32,29 @@ class ProjectForm(forms.ModelForm):
 
 
 class ProjectPostsForm(forms.ModelForm):
+    post_image = forms.FileField(required=False)
+    caption = forms.CharField(required=False, widget=forms.Textarea())
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        for field in self.fields.values():
+            field.widget.attrs['class'] = 'form-control auth-input'
+
+
+    def clean_post_image(self):
+        post_image = self.cleaned_data.get('post_image')
+
+        if post_image:
+            ext = os.path.splitext(post_image.name)[1].lower()
+            if ext not in ['.jpg', '.jpeg', '.png']:
+                raise ValidationError('Only JPG and PNG files are allowed.')
+
+        return post_image
 
     class Meta:
         model = ProjectPost
-        fields = ['image', 'caption']
-        widgets = {
-            'image': forms.FileInput(attrs={'class': 'form-control auth-input'}),
-            'caption': forms.Textarea(attrs={'rows': 3, 'class': 'form-control'}),
-        }
+        fields = ['post_image', 'caption']
         labels = {
-            'image': 'Photo',
+            'post_image': 'Photo',
         }
-
-    def clean_image(self):
-        image = self.cleaned_data.get('image')
-        print(os.path.splitext(image.name)[1].lower())
-
-        if image:
-            ext = os.path.splitext(image.name)[1].lower()
-            if ext not in ['.jpg', '.jpeg', '.png']:
-                raise ValidationError("Only JPG and PNG files are allowed.")
-
-        return image

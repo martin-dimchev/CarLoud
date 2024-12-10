@@ -197,19 +197,13 @@ class ProjectPostEditView(LoginRequiredMixin, UpdateView):
 
         return super().get(request, *args, **kwargs)
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        form = self.form_class(instance=self.get_object())
-        context['form'] = form
-
-        return context
 
     def form_valid(self, form):
         post = get_object_or_404(ProjectPost, pk=self.kwargs.get('post_pk'))
 
         if post.project.user == self.request.user:
             if self.request.FILES:
-                uploaded_file = self.request.FILES['image']
+                uploaded_file = self.request.FILES['post_image']
 
                 temp_dir = settings.TEMP_FILES
                 os.makedirs(temp_dir, exist_ok=True)
