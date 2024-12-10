@@ -12,14 +12,17 @@ class Like(models.Model):
         on_delete=models.CASCADE,
         related_name='likes',
     )
-    image = models.ForeignKey(
+    post = models.ForeignKey(
         ProjectPost,
         on_delete=models.CASCADE,
         related_name='likes',
     )
 
+    def __str__(self):
+        return f'{self.user}->{self.post}: like'
+
     class Meta:
-        unique_together = ('user', 'image')
+        unique_together = ('user', 'post')
 
 
 class Comment(models.Model):
@@ -28,7 +31,7 @@ class Comment(models.Model):
         on_delete=models.CASCADE,
         related_name='comments',
     )
-    image = models.ForeignKey(
+    post = models.ForeignKey(
         ProjectPost,
         on_delete=models.CASCADE,
         related_name='comments',
@@ -39,7 +42,7 @@ class Comment(models.Model):
     )
 
     def __str__(self):
-        return f'{self.image} comment'
+        return f'{self.post}: comment'
 
 
 class Follower(models.Model):

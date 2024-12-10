@@ -150,7 +150,7 @@ document.addEventListener("DOMContentLoaded", function () {
             if (inputElement.value.trim()) {
                 const data = {
                     "text": inputElement.value,
-                    "image": imageId
+                    "post": imageId
                 }
 
                 fetch(`${domain}/api/comments/add/`, {

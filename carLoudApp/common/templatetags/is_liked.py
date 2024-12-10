@@ -7,9 +7,9 @@ from carLoudApp.projects.models import  ProjectPost
 register = template.Library()
 
 @register.simple_tag
-def is_liked(user, image_pk):
-    if image_pk:
-        user_liked_images_pks = Like.objects.filter(user=user).values_list('image', flat=True)
-        if image_pk in user_liked_images_pks:
+def is_liked(user, post_pk):
+    if post_pk:
+        user_liked_images_pks = Like.objects.filter(user=user).values_list('post', flat=True)
+        if post_pk in user_liked_images_pks:
             return 'liked'
     return ''

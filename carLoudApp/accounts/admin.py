@@ -1,11 +1,12 @@
 from django.contrib import admin
 from django.contrib.auth import get_user_model
-from django.contrib.auth.admin import UserAdmin as DefaultUserAdmin
+from django.contrib.auth.admin import UserAdmin
 from django.utils.html import format_html
+
 from .models import Profile
 
-
 UserModel = get_user_model()
+
 
 class ProfileInline(admin.StackedInline):
     model = Profile
@@ -15,25 +16,51 @@ class ProfileInline(admin.StackedInline):
 
 
 @admin.register(UserModel)
-class UserAdmin(DefaultUserAdmin):
+class UserAdmin(admin.ModelAdmin):
     model = UserModel
+    inlines = [ProfileInline]
+
     fieldsets = (
-        (None, {'fields': ('email', 'password')}),
-        ('Personal Information', {'fields': ('first_name', 'last_name', 'is_verified')}),
-        ('Permissions', {'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions')}),
-        ('Important Dates', {'fields': ('last_login', 'date_joined')}),
+        (None, {
+            'fields':
+                (
+                    'email',
+                    'password',
+                    'first_name',
+                    'last_name'
+                )
+            }
+         ),
+        ('Permissions',{
+            'fields':
+                (
+                    'is_active',
+                    'is_staff',
+                    'is_superuser',
+                    'is_verified',
+                    'groups',
+                    'user_permissions'
+                )
+            }
+        ),
+        ('Important Dates',{
+            'fields':
+                (
+                    'last_login',
+                    'date_joined'
+                )
+            }
+         ),
     )
+
     readonly_fields = ('last_login', 'date_joined')
-    list_display = ('email', 'first_name', 'last_name', 'is_verified', 'is_staff', 'last_login')
+    list_display = ('username', 'first_name', 'last_name', 'is_verified', 'is_staff', 'last_login')
     list_filter = ('is_verified', 'is_staff', 'is_superuser', 'is_active', 'groups')
     search_fields = ('email', 'first_name', 'last_name')
     ordering = ('email',)
-    inlines = [ProfileInline]
 
-    def get_inline_instances(self, request, obj=None):
-        """Show inlines only when editing a specific user."""
-        if obj:
-            return super().get_inline_instances(request, obj)
-        return []
-
+    def get_form(self, request, obj=None, **kwargs):
+        form = super().get_form(request, obj, **kwargs)
+        form.base_fields['is_verified'].help_text = 'Designates whether the user has verified email and can login in the system.'
+        return form
 

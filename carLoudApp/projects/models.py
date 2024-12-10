@@ -64,5 +64,5 @@ class ProjectPost(models.Model):
     )
 
     def __str__(self):
-        return f'{self.project} {self.caption}'
+        return f'{self.project}: post'
 

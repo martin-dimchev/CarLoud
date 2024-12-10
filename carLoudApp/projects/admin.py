@@ -4,7 +4,7 @@ from carLoudApp.projects.models import Project, ProjectPost
 @admin.register(Project)
 class ProjectAdmin(admin.ModelAdmin):
 
-    list_display = ('title', 'user', 'brand', 'model', 'year', 'private', 'created_at')
+    list_display = ('title', 'user', 'brand', 'model', 'year', 'private', 'posts', 'created_at')
     list_filter = ('private', 'brand', 'year', 'created_at')
     search_fields = ('title', 'brand', 'model', 'user__username')
     ordering = ('-created_at',)
@@ -12,14 +12,31 @@ class ProjectAdmin(admin.ModelAdmin):
 
     fieldsets = (
         ('Project Info', {
-            'fields': ('title', 'user', 'brand', 'model', 'year', 'description', 'horsepower', 'drivetrain')
+            'fields': ('title', 'user', 'brand', 'model', 'year', 'drivetrain')
         }),
-        ('Settings', {
-            'fields': ('private', 'created_at'),
+        ('Status', {
+            'fields': ('private',)
+        }),
+        ('Additional Info', {
+            'fields': ('description', 'horsepower', 'created_at'),
         }),
     )
+
+    def posts(self, obj):
+        return obj.posts.count()
 
 
 @admin.register(ProjectPost)
 class ProjectPostsAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('user','project', 'caption', 'likes', 'comments', 'created_at')
+    list_filter = ('created_at',)
+    search_fields = ('project__title','project__brand', 'project__model', 'caption', 'project__user__username')
+
+    def user(self, obj):
+        return obj.project.user
+
+    def likes(self, obj):
+        return obj.likes.count()
+
+    def comments(self, obj):
+        return obj.comments.count()

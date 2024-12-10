@@ -16,26 +16,27 @@ class LikeToggleAPIView(APIView):
     authentication_classes = [SessionAuthentication]
     permission_classes = [IsAuthenticated]
 
-    def post(self, request, image_pk, *args, **kwargs):
+    def post(self, request, post_pk, *args, **kwargs):
 
         try:
-            image = ProjectPost.objects.get(pk=image_pk)
+            post = ProjectPost.objects.get(pk=post_pk)
         except ProjectPost.DoesNotExist:
-            image = None
+            post = None
 
-        if image:
-            image_likes_pks = image.likes.all().values_list('user', flat=True)
-            if request.user.pk not in image_likes_pks:
-                Like.objects.create(user=request.user, image=image).save()
+        if post:
+            post_likes_pks = post.likes.all().values_list('user', flat=True)
+            if request.user.pk not in post_likes_pks:
+                Like.objects.create(user=request.user, post=post).save()
                 return Response(status=status.HTTP_201_CREATED, data={
                     "liked": True,
-                    "likes_count": image.likes.count()
+                    "likes_count": post.likes.count()
                 })
             else:
-                Like.objects.filter(user=request.user, image=image).delete()
+                Like.objects.filter(user=request.user, post=post).delete()
+                Like.objects.filter(user=request.user, post=post).delete()
                 return Response(status=status.HTTP_200_OK, data={
                     "liked": False,
-                    "likes_count": image.likes.count()
+                    "likes_count": post.likes.count()
                 })
         return Response(status=status.HTTP_404_NOT_FOUND, data={})
 
