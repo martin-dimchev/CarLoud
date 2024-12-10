@@ -14,11 +14,19 @@ The main goal is to build a strong and friendly community of people which share 
     git clone https://github.com/martin-dimchev/CarLoud.git
 
 2. Create and activate virtual environment
+   ```
+   python -m venv .venv
+
 3. Install dependencies:
     ```
     pip install -r requirements.txt
    
 4. Create and configure database
+   You can use Docker for example:
+   ```
+   docker pull postgres
+   docker run --name my-postgres -e POSTGRES_USER=myuser -e POSTGRES_PASSWORD=mypassword -e POSTGRES_DB=mydatabase -p 5432:5432 -d postgres
+
 5. Start Redis as a service:  
     You can use Docker for example:
     ```
@@ -26,6 +34,14 @@ The main goal is to build a strong and friendly community of people which share 
     docker run -d --name redis -p 6379:6379 redis:latest
    
 6. Setup .env
+
+   Run this command: 
+   ```
+   cp .env.template .env
+   ```
+   Configure your variables in the .env file
+
+
 7. Apply migrations:
     ```
     python manage.py migrate
