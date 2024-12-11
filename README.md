@@ -21,7 +21,7 @@ The main goal is to build a strong and friendly community of people which share 
     ```
     pip install -r requirements.txt
    
-4. Create and configure database
+4. Create and configure database  
    You can use Docker for example:
    ```
    docker pull postgres
