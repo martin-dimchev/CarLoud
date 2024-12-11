@@ -137,7 +137,7 @@ class ProjectPostCreateView(LoginRequiredMixin, CreateView):
 
         temp_dir = settings.TEMP_FILES
         os.makedirs(temp_dir, exist_ok=True)
-        uploaded_file = self.request.FILES['image']
+        uploaded_file = self.request.FILES['post_image']
         temp_file_path = str(settings.TEMP_FILES / uploaded_file.name)
 
         with default_storage.open(temp_file_path, 'wb') as temp_file:
