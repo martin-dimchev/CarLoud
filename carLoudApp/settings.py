@@ -117,7 +117,7 @@ TEMP_FILES = BASE_DIR / 'tmp'
 
 AUTH_USER_MODEL = 'accounts.User'
 
-LOGOUT_REDIRECT_URL = reverse_lazy('index')
+LOGOUT_REDIRECT_URL = reverse_lazy('login')
 
 cloudinary.config(
     cloud_name=config('CLOUD_NAME'),

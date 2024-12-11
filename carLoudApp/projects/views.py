@@ -233,7 +233,7 @@ def project_post_delete(request, pk, post_pk):
 
     if post not in project.posts.all():
         raise Http404
-    elif project.user != request.user and 'projects.delete_projectposts' not in user_permissions:
+    elif project.user != request.user and 'projects.delete_projectpost' not in user_permissions:
         return HttpResponseForbidden('You do not have permission to delete this post.')
 
     if request.method == 'POST':
